@@ -32,36 +32,56 @@ public class Couche_neuronale {
 	{
 		System.out.println("---Calcul des sorties de chaque neurone");
 	
-		int compteur = 0;
+		float compteur_couche = 0;
+		Neurone neurone;
 		
+		for(int index = 0; index < neuroneListe.size(); index += 1)
 		//On calcul les valeurs de chaques neurones
-		for(Neurone neurone : neuroneListe)
+		//for(Neurone neurone : neuroneListe)
 		{
+			System.out.println("Neurone n° " + index + " result");
+			
+			neurone = neuroneListe.get(index);
+			
 			//Reset de la valeur
 			neurone.result = (double) 0;
 			//Dans le cas de la première couche
-			if(compteur < this.nbr_neurone_par_couche)
+			if(index < this.nbr_neurone_par_couche)
 			{
+				//On parcourt toutes les entrées
 				for(int i = 0; i < entrees.length; i++)
 				{
+					System.out.print("Calcul : " + entrees[i] + " * " + neurone.w[i] + " - " + neurone.bias[i] + " + " + neurone.result);
 					neurone.result += (entrees[i] * neurone.w[i]) - neurone.bias[i];
+					System.out.println( " = " + neurone.result);
 				}
 			}
 			else
 			{
+				System.out.println("Compteur couche : " + compteur_couche);
 				for(int i = 0; i < this.nbr_neurone_par_couche; i++)
 				{
-					neurone.result += (neuroneListe.get(compteur+i-this.nbr_neurone_par_couche).result * neurone.w[i]) - neurone.bias[i];
+					if(index >= 4)
+					{
+						System.out.print("Calcul : " + neuroneListe.get(i+(int)compteur_couche+1).result + " * " +  neurone.w[i] + " - " + neurone.bias[i] + " + " + neurone.result);
+						neurone.result += (neuroneListe.get(i+(int)compteur_couche+1).result * neurone.w[i]) - neurone.bias[i];
+						System.out.println( " = " + neurone.result);
+					}
+					else
+					{
+						System.out.print("Calcul : " + neuroneListe.get(i+(int)compteur_couche).result + " * " +  neurone.w[i] + " - " + neurone.bias[i] + " + " + neurone.result);
+						neurone.result += (neuroneListe.get(i+(int)compteur_couche).result * neurone.w[i]) - neurone.bias[i];
+						System.out.println( " = " + neurone.result);
+					}
 				}
+				compteur_couche += ((float)index % this.nbr_neurone_par_couche);
 			}
 			
-			//neurone.result = neurone.sigmoide(neurone.result);
+			neurone.result = neurone.sigmoide(neurone.result);
+			System.out.println( "Result = " + neurone.result);
 			
-			System.out.println("Neurone n° " + compteur + " result");
-			System.out.println(neurone.result);
 			
-			//On parcourt toutes les neurones
-			compteur++;
+			
 		}
 		
 		
