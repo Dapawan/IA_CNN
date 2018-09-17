@@ -22,13 +22,13 @@ public class Neurone {
 		//On init les params entre -1 et 1
 		for(int i = 0; i < nbr_liaison; i++)
 		{
-			/*this.w[i] = (Math.random() * 2) - 1;
-			this.bias[i] = (Math.random() * 2) - 1;*/
+			this.w[i] = (Math.random() * 2) - 1;
+			this.bias[i] = (double) 0;//(Math.random() * 20) - 10;
 			
-			this.bias[i] = (double) numero;
-			this.w[i] = (double) numero;
+			/*this.bias[i] = (double) numero;
+			this.w[i] = (double) numero;*/
 			
-			System.out.println("W" + i + " = " + this.w[i] + " bias " + i + " = " + this.bias[i]);
+			//System.out.println("W" + i + " = " + this.w[i] + " bias " + i + " = " + this.bias[i]);
 		}
 	}
 	
