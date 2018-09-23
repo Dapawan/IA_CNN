@@ -64,6 +64,38 @@ public class Fenetre extends JFrame implements Valeurs{
 		}
 	}
 	
+	public void gestionDeplacementPlusProche()
+	{
+		double minX;
+		double minY;
+		
+		for(Poisson poisson : liste_poisson)
+		{
+			minX = 3000;
+			minY = 3000;
+			if(poisson.vie == true)
+			{
+				for(Poisson poisson_ : liste_poisson)
+				{
+					if( (poisson_.equals(poisson) == false) && (poisson_.vie == true) )
+					{
+						if( (minX + minY) > (Math.abs(poisson_.posX - poisson.posX) + Math.abs(poisson_.posY - poisson.posY)) )
+						{
+							minX = (poisson_.posX - poisson.posX);
+							minY = (poisson_.posY - poisson.posY);
+						}
+					}
+				}
+				
+				if( (poisson.isUser != true) && ((minX != 3000) || (minY != 3000)) )
+				{
+					poisson.move(minX, minY,liste_poisson);
+				}
+			}
+		}
+		
+	}
+	
 	public Fenetre(int nbr_poissons) {
 		// TODO Auto-generated constructor stub
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

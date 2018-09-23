@@ -40,7 +40,7 @@ public class main implements Valeurs{
 			while(true)
 			{
 				try {
-					Thread.sleep(10);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -49,7 +49,8 @@ public class main implements Valeurs{
 				
 				//Gestion des déplacements du poisson user
 				fenetre.gestionDeplacementClavier();
-				fenetre.gestionDeplacementaleatoirePoisson();
+				
+				fenetre.gestionDeplacementPlusProche();
 				
 				
 				fenetre.repaint();
