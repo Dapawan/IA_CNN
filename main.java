@@ -1,67 +1,24 @@
-/**
- * 
- */
-package neurone;
+package mario;
 
-/**
- * @author Dapawan
- *
- */
-public class main implements Valeurs{
+public class main {
 
-	/**
-	 * @param args
-	 */
+	private static Fenetre_ fenetre;
 	
-	public static IA ia;
-	
-	public static Fenetre fenetre;
-	
-
-	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
-		
-		//On crée notre structure de neurone
-		
-		
-		//Couche_neuronale couche_neuronale = new Couche_neuronale(3, 2);
-		
-		if(isIA == true)
+
+		fenetre = new Fenetre_();
+		while(true)
 		{
-			ia = new IA();
-		}
-		else
-		{
-			//Test du jeux
-			fenetre = new Fenetre(nombrePoissons);
-			while(true)
-			{
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				//Gestion des déplacements du poisson user
-				fenetre.gestionDeplacementClavier();
-				
-				fenetre.gestionDeplacementPlusProche();
-				
-				
-				fenetre.repaint();
-				
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			fenetre.gestionDeplacementClavier();
+			fenetre.repaint();
 		}
-		
-			
-		
-		
 	}
 
 }
-
