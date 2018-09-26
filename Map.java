@@ -11,14 +11,27 @@ public class Map implements Valeurs{
 	
 	public Map() {
 		
+		Bloc bloc_ = new Bloc(-1, -1);
 		
 		perso = new Personnage();
 		
 		listeBloc = new ArrayList<>();
-		int posY = hauteurFenetre - hauteurBloc;
+		int posY = hauteurFenetre - bloc_.hauteur - 100;
 		
-		for(int x = 0; x < longueurLevel; x+= longueurBloc)
+		int toUp = 0;
+		
+		for(int x = 0; x < longueurLevel; x+= bloc_.longueur)
 		{
+			if( (toUp == 1) && (posY > limitePalierUp) )
+			{
+				posY -= palierUp;
+			}
+			else if( (posY < limitePalierDown) )
+			{
+				posY += palierUp;
+			}
+			
+			toUp = (int)(Math.random()*2);
 			
 			listeBloc.add(new Bloc(x,posY));
 		}
@@ -32,7 +45,7 @@ public class Map implements Valeurs{
 	//La synchro évite l'accès à plusieurs thread en même temps
 	public synchronized void move(int x, int y)
 	{
-		if( collision(x, y) == false )
+		if( (collision(x, y) == false) && (x >= 0) && (y >= 0) )
 		{
 			this.perso.posX = x;
 			this.perso.posY = y;
@@ -44,8 +57,8 @@ public class Map implements Valeurs{
 	{
 		for(Bloc bloc : listeBloc)
 		{
-			if( ((NewposX >= bloc.posX) &&  ( (NewposX + longueurPerso) <= (bloc.posX + bloc.longueur) ) ) &&
-					(((NewposY + hauteurPerso) >= bloc.posY) && ( (NewposY + hauteurPerso) <= (bloc.posY + bloc.hauteur) ) ) )
+			if( ((NewposX >= bloc.posX) && ( (NewposX) <= (bloc.posX + bloc.longueur) ) ) &&
+					(((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY ) <= (bloc.posY + bloc.hauteur) ) ) )
 			{
 				return true;
 			}

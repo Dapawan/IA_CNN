@@ -131,7 +131,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					}
 					int xEnd = xStart + longueurFenetre;
 					
-					g.setColor(Color.BLACK);
+					//g.setColor(Color.BLACK);
 					
 					if( (map != null) && (map.listeBloc != null) )
 					{
@@ -139,14 +139,20 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						{
 							if( (bloc.posX >= xStart) && (bloc.posX <= xEnd) )
 							{
-								g.fillRect(bloc.posX, bloc.posY, bloc.longueur, bloc.hauteur);
+								//g.fillRect(bloc.posX, bloc.posY, bloc.longueur, bloc.hauteur);
+								g.drawImage(bloc.img,bloc.posX, bloc.posY, null);
 							}
 						}
 					}
 					
-					g.setColor(Color.BLUE);
 					
-					g.fillOval(map.perso.posX, map.perso.posY, longueurPerso, hauteurPerso);
+					//Dessin du personnage
+					
+					/*g.setColor(Color.BLUE);
+					
+					g.fillOval(map.perso.posX, map.perso.posY, longueurPerso, hauteurPerso);*/
+					
+					g.drawImage(map.perso.img,map.perso.posX, map.perso.posY, null);
 				}
 				
 			}

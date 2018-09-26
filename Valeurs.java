@@ -6,9 +6,9 @@ public interface Valeurs {
 	int longueurFenetre = 1920;
 	
 	
-	int longueurLevel = 1000;
+	int longueurLevel = 2000;
 	//Bloc
-	int hauteurBloc = 100;
+	int hauteurBloc = 50;
 	int longueurBloc = 100;
 	
 	int hauteurPerso = 50;
@@ -19,8 +19,13 @@ public interface Valeurs {
 	
 	//Déplacement perso
 	int vitesseX = 2;
-	int vitesseY = 10;
+	int vitesseY = 2;
 	//Déplacement caméra
 	int espaceX = 20;
+	
+	//Palier création level up
+	int palierUp = 10;
+	int limitePalierUp = 500;
+	int limitePalierDown = hauteurFenetre;
 	
 }
