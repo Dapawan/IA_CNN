@@ -8,12 +8,19 @@ public class Map implements Valeurs{
 	public Personnage perso;
 	
 	private Gravite gravite;
+	public int posXRelativeFenetre;
+	
 	
 	public Map() {
 		
-		Bloc bloc_ = new Bloc(-1, -1);
 		
-		perso = new Personnage();
+		//Init de la pos relative
+		this.posXRelativeFenetre = 0;		
+		
+		
+		Bloc bloc_ = new Bloc(-1, -1);
+		Bloc bloc_temp;
+		
 		
 		listeBloc = new ArrayList<>();
 		int posY = hauteurFenetre - bloc_.hauteur - 100;
@@ -32,9 +39,17 @@ public class Map implements Valeurs{
 			}
 			
 			toUp = (int)(Math.random()*2);
+			bloc_temp = new Bloc(x,posY);
+			listeBloc.add(bloc_temp);
 			
-			listeBloc.add(new Bloc(x,posY));
+			//Ne crée qu'1 fois l'instance
+			if(perso == null)
+			{
+				perso = new Personnage(bloc_temp);
+			}
 		}
+		
+		listeBloc.add(new Bloc(500,500));
 		
 		gravite = new Gravite(this);
 		
@@ -49,6 +64,16 @@ public class Map implements Valeurs{
 		{
 			this.perso.posX = x;
 			this.perso.posY = y;
+			
+			//On bloque le déplacement à droite à ce seuil
+			if(x >= stopMvGauche)
+			{
+				this.posXRelativeFenetre = stopMvGauche;
+			}
+			else
+			{
+				this.posXRelativeFenetre = x;
+			}
 		}
 		
 	}
@@ -57,11 +82,38 @@ public class Map implements Valeurs{
 	{
 		for(Bloc bloc : listeBloc)
 		{
-			if( ((NewposX >= bloc.posX) && ( (NewposX) <= (bloc.posX + bloc.longueur) ) ) &&
-					(((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY ) <= (bloc.posY + bloc.hauteur) ) ) )
+			//Collision en bas à droite
+			if( ( (( (NewposX + perso.longueurPerso) >= bloc.posX) && (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur) ) && 
+					(((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) ) ) )
+			{
+				//On touche le sol
+				perso.isJumping = false;
+				
+				return true;
+			}
+			//Collision en bas à gauche
+			else if( ((NewposX) >= bloc.posX) && ((NewposX) <= (bloc.posX + bloc.longueur))  && 
+					((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
+			{
+				//On touche le sol
+				perso.isJumping = false;
+				
+				return true;
+			}
+			//Collision en haut à gauche
+			else if(((NewposX) >= bloc.posX) && ((NewposX) <= (bloc.posX + bloc.longueur))  && 
+					((NewposY) >= (bloc.posY)) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
 			{
 				return true;
 			}
+			
+			//Collision en haut à droite
+			else if( ( (NewposX + perso.longueurPerso) >= bloc.posX) && ( (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur))  && 
+					((NewposY) >= (bloc.posY)) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
+			{
+				return true;
+			}
+			
 		}
 		
 		return false;
