@@ -1,12 +1,28 @@
 package mario;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
 public interface Valeurs {
 
 	int hauteurFenetre = 1080;
-	int longueurFenetre = 1920;
+	int longueurFenetre = 1000;
+	
+	//Neurone
+	int biasMax = 50;//Entre - biasMax et + biasMax
+	int weightMax = 50;//de même
 	
 	
-	int longueurLevel = 2000;
+	//Affichage temps
+	int posXChrono = 0;
+	int posYChrono = 100;
+	//Affichage score
+	int posXScore = posXChrono + 100;
+	int posYScore = posYChrono;
+	
+	int longueurLevel = 100000;
 	//Bloc
 	int hauteurBloc = 50;
 	int longueurBloc = 100;
@@ -29,7 +45,7 @@ public interface Valeurs {
 	
 	//Palier création level up
 	int palierUp = 10;
-	int limitePalierUp = 500;
+	int limitePalierUp = hauteurFenetre - 100;
 	int limitePalierDown = hauteurFenetre;
 	
 	
@@ -48,5 +64,8 @@ public interface Valeurs {
 	
 	//String img
 	String imgStr[] = { "depl_gauche_", "depl_droite_"};
+	
+	//Background img
+	String backgroundStr = "C:\\\\Users\\\\Dapawan\\\\eclipse-workspace\\\\IA\\\\src\\\\mario\\\\images\\\\background_1.png";
 	
 }

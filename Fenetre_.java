@@ -15,17 +15,20 @@ import neurone.Fenetre.Panel;
 public class Fenetre_ extends JFrame implements Valeurs{
 	
 	public JPanel panel;
-	private ArrayList<Integer> touche_tapee;
+	private volatile ArrayList<Integer> touche_tapee;
 	public Map map;
-	
-	public boolean isDeplRight;
+
 	public int compteurImg;
 	
+	public Chrono chrono;
+	
 	public Direction direction;
-
+	public Direction direction_old;
+	
 	public Fenetre_() {
-		
+				
 		this.direction = Direction.INIT;
+		this.direction_old = this.direction;
 		
 		this.compteurImg = 10;
 		
@@ -34,6 +37,11 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		this.setSize(longueurFenetre, hauteurFenetre);
 		this.setTitle("Jeux de plateforme");
 		
+		//SI IA
+		if(chrono == null)
+		{
+			chrono = new Chrono();
+		}
 		
 		
 		panel = new Panel();
@@ -78,6 +86,13 @@ public class Fenetre_ extends JFrame implements Valeurs{
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				// TODO Auto-generated method stub
+				
+				//Lancement du chrono au premier mov
+				if(chrono == null)
+				{
+					chrono = new Chrono();
+				}
+				
 				boolean test = false;
 				for(Integer touche : touche_tapee)
 				{
@@ -100,6 +115,53 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		
 		
 		
+	}
+	
+	public void gestionDeplacementIA(Double[] sortie)
+	{
+		
+		/*
+		 * 
+		 * Seuil > 0.5
+		 * Plusieurs déplacements possibles à la fois
+		 */
+		
+		int posX = map.perso.posX;
+		int posY = map.perso.posY;
+		
+		for(int i = 0; i < sortie.length; i++)
+		{
+			if(sortie[i] >= 0.5)
+			{
+				switch(i)
+				{
+				case 0://Bas
+					map.move(posX, (posY + vitesseY) );
+					this.direction = Direction.DOWN;
+					break;
+					
+				case 1://Gauche
+					map.move( (posX - vitesseX), posY);
+					this.direction = Direction.LEFT;
+					break;
+					
+				case 2://Droite
+					map.move( (posX + vitesseX), posY);
+					this.direction = Direction.RIGHT;
+					break;
+					
+				case 3://Saut
+					if(map.perso.isJumping == false)
+					{
+						map.perso.isJumping = true;
+						this.direction = Direction.UP;
+					}
+					break;
+				
+				}
+			}
+		}
+		this.direction_old = this.direction;
 	}
 	
 	public synchronized void gestionDeplacementClavier()
@@ -135,6 +197,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				{
 					map.move(posX, (posY + vitesseY) );
 				}
+				this.direction_old = this.direction;
 
 			}
 		}
@@ -160,8 +223,13 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				// TODO Auto-generated method stub
 				super.paint(g);
 				
+				
 				if( (map != null) && (map.perso != null) )
 				{
+					
+					//Background
+					g.drawImage(map.backgroundImg,0,0,null);
+					
 					int xStart = map.perso.posX;//map.perso.posX - espaceX;
 					
 					int xEnd = xStart + longueurFenetre;
@@ -204,10 +272,27 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						}
 						g.drawImage(map.perso.img[0][(compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
 					}
-					else
+					else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
 					{
-						g.drawImage(map.perso.img[1][1],map.posXRelativeFenetre, map.perso.posY, null);
+						if( (direction_old == Direction.RIGHT) || (direction_old == Direction.INIT) )
+						{
+							g.drawImage(map.perso.img[1][1],map.posXRelativeFenetre, map.perso.posY, null);
+						}
+						else
+						{
+							g.drawImage(map.perso.img[0][1],map.posXRelativeFenetre, map.perso.posY, null);
+						}
 					}
+					
+					
+					//Affichage du score
+					
+					g.setColor(Color.black);
+					if(chrono != null)
+					{
+						g.drawString("Temps : " + chrono.toString(),posXChrono,posYChrono);
+					}
+					g.drawString("Score : " + map.perso.score + " points", posXScore, posYScore);
 				}
 				
 			}

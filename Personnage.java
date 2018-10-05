@@ -1,6 +1,7 @@
 package mario;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,10 +17,15 @@ public class Personnage implements Valeurs{
 	
 	public Boolean isJumping;
 	
+	public int score;
+	
 	
 	public BufferedImage img[][] = new BufferedImage[2][9];
 	
 	public Personnage() {
+		
+		this.score = 0;
+		
 		this.posX = 0;
 		this.posY = 0;
 		//Évite de pouvoir sauter au début
@@ -31,6 +37,7 @@ public class Personnage implements Valeurs{
 			{
 				try {
 					img[a][i] = ImageIO.read(new File("C:\\Users\\Dapawan\\eclipse-workspace\\IA\\src\\mario\\images\\perso_" + imgStr[a] + i + ".png"));
+				
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -43,6 +50,7 @@ public class Personnage implements Valeurs{
 	}
 	
 	public Personnage(Bloc bloc) {
+				
 		this.posX = bloc.posX;
 		this.posY = bloc.posY - jumpY;
 		//Évite de pouvoir sauter au début
@@ -54,6 +62,7 @@ public class Personnage implements Valeurs{
 			{
 				try {
 					img[a][i] = ImageIO.read(new File("C:\\Users\\Dapawan\\eclipse-workspace\\IA\\src\\mario\\images\\perso_" + imgStr[a] + i + ".png"));
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
