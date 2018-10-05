@@ -1,43 +1,63 @@
-package neurone;
+package mario;
 
-import java.util.Random;
-
-public class Neurone {
-
-	public Double[] w;
+public class Neurone implements Valeurs{
+	
 	public Double[] bias;
+	public Double[] weight;
 	
-	public Double result;
-	
+	public int nbrEntree;
 	public static int numero;
 	
+	public double result;
 	
-	public Neurone(int nbr_liaison) {
-		// TODO Auto-generated constructor stub
-		numero++;
-		//On init le nombre de liaisons
-		this.w = new Double[nbr_liaison];
-		this.bias = new Double[nbr_liaison];
+	public Neurone(int nbrEntree) {
 		
-		//On init les params entre -1 et 1
-		for(int i = 0; i < nbr_liaison; i++)
-		{
-			this.w[i] = (Math.random() * 2) - 1;
-			this.bias[i] = (double) 0;//(Math.random() * 20) - 10;
-			
-			/*this.bias[i] = (double) numero;
-			this.w[i] = (double) numero;*/
-			
-			//System.out.println("W" + i + " = " + this.w[i] + " bias " + i + " = " + this.bias[i]);
+		this.numero++;
+		//System.out.println("Création de la neurone n° " + this.numero);
+		this.result = 0.0;
+		
+		this.nbrEntree = nbrEntree;
+		//On prépare les valeurs pour chaque liaisons
+		bias = new Double[nbrEntree];
+		weight = new Double[nbrEntree];
+		//Init des valeurs
+		
+		for(int i = 0; i < nbrEntree; i++) {
+			this.bias[i] = (Math.random() - 0.5) * (biasMax * 2);
+			this.weight[i] = (Math.random() - 0.5) * (weightMax * 2);
 		}
+		
+		
 	}
 	
-	public double sigmoide(double x)
+	public double calculResult(Double[] entree2)
 	{
+		double result = 0.0;
+		
+		for(int i = 0; i < entree2.length; i++)
+		{
+			//result += sig(weight * entree + bias)
+			result += sigmoideFunction( (this.weight[i] * entree2[i]) + this.bias[i]);
+		}
+		
+		
+		//On save le réultat
+		this.result = result;
+		
+		return result;
+	}
+	
+	public double sigmoideFunction(double value)
+	{
+		double result = 0.0;
+		
 		/*
 		 * 1/(1+exp(-k*x))
 		 */
-		return (1/(1 + Math.exp(-x))); //On prend k = 1 pour la fonction
+		result = (1/ (1 + Math.exp(value*-1)) ); //On prend k = 1 pour la fonction
+		
+		return result;
+		
 	}
-}
 
+}
