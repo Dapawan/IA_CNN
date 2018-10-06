@@ -138,7 +138,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		
 		for(int i = 0; i < sortie.length; i++)
 		{
-			if(sortie[i] >= 0.5)
+			if(sortie[i] >= seuilDecision)
 			{
 				switch(i)
 				{
@@ -343,7 +343,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						//On mémorise la hauteur de la neurone
 						oldPosY = posY;
 						
-						if(coucheNeuronale.neuroneArray[i][a].result >= 0.5)
+						if(coucheNeuronale.neuroneArray[i][a].result >= seuilDecision)
 						{
 							g.setColor(resultatSupSeuil);
 						}
@@ -360,12 +360,15 @@ public class Fenetre_ extends JFrame implements Valeurs{
 							{
 								g.setColor(liaisonPositive);
 							}
-							else
+							else 
 							{
 								g.setColor(liaisonNegative);
 							}
-							g.drawLine( (posX - longueurLiaisons), posY + (grandeurNeurone / 2), posX , oldPosY + (grandeurNeurone / 2));
-							g.drawString(String.format("%.2f", (float)coucheNeuronale.neuroneArray[i][a].weight[x]), posX - (longueurLiaisons / 2),  posY + (grandeurNeurone / 2) - 5);
+							if(coucheNeuronale.neuroneArray[i][a].weight[x] != 0)
+							{
+								g.drawLine( (posX - longueurLiaisons), posY + (grandeurNeurone / 2), posX , oldPosY + (grandeurNeurone / 2));
+								g.drawString(String.format("%.2f", (float)coucheNeuronale.neuroneArray[i][a].weight[x]), posX - (longueurLiaisons / 2),  posY + (grandeurNeurone / 2) - 5);
+							}
 							posY += grandeurNeurone;
 						}
 						//On retourne à la posY

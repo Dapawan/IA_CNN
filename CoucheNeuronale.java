@@ -1,6 +1,6 @@
 package mario;
 
-public class CoucheNeuronale implements Valeurs{
+public class CoucheNeuronale implements Valeurs,Cloneable{
 
 	
 	/*
@@ -35,7 +35,13 @@ public class CoucheNeuronale implements Valeurs{
 	public final int NBR_ENTREE_PAR_NEURONE = 4;
 	
 	private static int numeroMutation;
+	private static int numeroNeurone;
 	private static boolean incrMutation;
+	
+	private static int numeroCoucheOld;
+	private static int numeroNeuroneOld;
+	private static int numeroWeightOld;
+	
 	private static double oldValue;
 	
 	
@@ -101,7 +107,9 @@ public class CoucheNeuronale implements Valeurs{
 	public CoucheNeuronale mutation(CoucheNeuronale[] coucheNeuronale, int progression)
 	{
 		//On copie le 1er élément
-		CoucheNeuronale result = coucheNeuronale[0];
+		CoucheNeuronale result = new CoucheNeuronale();
+		result = coucheNeuronale[0];
+		
 		for(int index = 1; index < coucheNeuronale.length; index++)
 		{
 			//On moyenne avec les autres
@@ -133,37 +141,79 @@ public class CoucheNeuronale implements Valeurs{
 		 * On choisit une couche et une neurone
 		 * 
 		 */
-		//int numeroCouche = (int) (Math.random() * NBR_COUCHE);
-		//int numeroNeurone = (int) (Math.random() * NBR_NEURONE_PAR_COUCHE);
+		int numeroCouche = (int) (Math.random() * NBR_COUCHE);
+		
+		int numeroNeurone = (int) (Math.random() * NBR_NEURONE_PAR_COUCHE);
+		
 		/*
 		 * On choisit quelle entrée affectée
 		 */
-		//int numeroEntree = (int) (Math.random() * NBR_ENTREE_PAR_NEURONE);
+		int numeroEntree = (int) (Math.random() * NBR_ENTREE_PAR_NEURONE);
+		
 		/*
 		 * On choisit bias ou weight
 		 */
-		//int isBias = (int) Math.random();
+		int isBias = (int) Math.random();
+		isBias = 0;
 		
-		/*if(isBias == 1)
+		if(isBias == 1)
 		{
 			result.neuroneArray[numeroCouche][numeroNeurone].bias[numeroEntree] += (Math.random() * (biasMax / 20));
 		}
 		else
 		{
 			result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree] += (Math.random() * (weightMax / 20));
+			if(progression > 0)
+			{
+				if(oldValue == 0)
+				{
+					result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree] += (Math.random() - 0.5);
+				}
+				else
+				{
+					result.neuroneArray[numeroCoucheOld][numeroNeuroneOld].weight[numeroWeightOld] += (Math.random());
+				}
+				oldValue = result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree];
+			}
+			else
+			{
+				result.neuroneArray[numeroCoucheOld][numeroNeuroneOld].weight[numeroWeightOld] = oldValue;
+				//On modifie autre chose
+				if(numeroWeightOld == numeroEntree)
+				{
+					if( (++numeroEntree) >= NBR_ENTREE_PAR_NEURONE)
+					{
+						numeroEntree = 0;
+					}
+					result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree] += (Math.random() - 0.5);
+					oldValue = result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree];
+					
+				}
+			}
 		}
-		*/
+		numeroCoucheOld = numeroCouche;
+		numeroNeuroneOld = numeroNeurone;
+		numeroWeightOld = numeroEntree;
 		
-		if(progression < 0)
+		/*
+		if(progression <= 0)
 		{
 			if(oldValue != 0)
 			{//On met l'ancienne valeur
-				result.neuroneArray[0][numeroMutation].weight[numeroMutation] = oldValue;
+				result.neuroneArray[0][numeroNeurone].weight[numeroMutation] = oldValue;
 			}
 			
-			if(numeroMutation >= NBR_NEURONE_PAR_COUCHE)
+			//On passe au numéro suivant 
+			numeroMutation++;
+			
+			if(numeroMutation >= NBR_ENTREE_PAR_NEURONE)
 			{
 				numeroMutation = 0;
+				numeroNeurone++;
+				if(numeroNeurone >= NBR_NEURONE_PAR_COUCHE)
+				{
+					numeroNeurone = 0;
+				}
 				if(incrMutation == false)
 				{
 					incrMutation = true;
@@ -171,21 +221,24 @@ public class CoucheNeuronale implements Valeurs{
 				else
 				{
 					incrMutation = false;
-					//On passe au numéro suivant 
-					numeroMutation++;
 				}
 			}
 		}
-		oldValue = result.neuroneArray[0][numeroMutation].weight[numeroMutation];
+		if(progression == 0)
+		{
+			progression = 1;
+			
+		}
+		oldValue = result.neuroneArray[0][numeroNeurone].weight[numeroMutation];
 		if(incrMutation == true)
 		{
-			result.neuroneArray[0][numeroMutation].weight[numeroMutation] += (progression);
+			result.neuroneArray[0][numeroNeurone].weight[numeroMutation] += (progression);
 		}
 		else
 		{
-			result.neuroneArray[0][numeroMutation].weight[numeroMutation] -= (progression);
+			result.neuroneArray[0][numeroNeurone].weight[numeroMutation] -= (progression);
 		}
-		
+		*/
 		return result;
 	}
 	
@@ -210,4 +263,9 @@ public class CoucheNeuronale implements Valeurs{
 		return result;
 	}
 	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return super.clone();
+	}
 }

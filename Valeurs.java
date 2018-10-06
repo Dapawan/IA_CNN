@@ -13,7 +13,7 @@ public interface Valeurs {
 	
 	//Neurone
 	int biasMax = 0;//Entre - biasMax et + biasMax
-	int weightMax = 1;//de même
+	int weightMax = 0;//de même
 	
 	
 	//Dessin coucheNeuronale
@@ -29,6 +29,8 @@ public interface Valeurs {
 	Color resultatSupSeuil = Color.BLACK;
 	Color resultatInfSeuil = Color.BLUE;
 	
+	//Seuil de décision
+	float seuilDecision = 0.75f;
 	
 	
 	//Affichage temps

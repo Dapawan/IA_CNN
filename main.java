@@ -3,12 +3,9 @@ package mario;
 public class main implements Valeurs{
 
 	private static Fenetre_ fenetre;
-	private static CoucheNeuronale coucheNeuronale;
 	
-	private static Resultat resultat;
-	private static CoucheNeuronale[] meilleursCouche = new CoucheNeuronale[1];
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
 
 		double entree[] = new double[4];
@@ -16,7 +13,9 @@ public class main implements Valeurs{
 		
 		int scoreOld = 0;
 		long timeOutSec = 0;
-		
+		CoucheNeuronale coucheNeuronale;
+		CoucheNeuronale[] meilleursCouche = new CoucheNeuronale[1];
+		Resultat resultat;
 		coucheNeuronale = new CoucheNeuronale();
 		
 		resultat = new Resultat();
@@ -27,7 +26,7 @@ public class main implements Valeurs{
 			if(fenetre.chrono != null)
 			{
 				//On regarde si le score augmente
-				if(scoreOld < fenetre.map.perso.score)
+				if( (scoreOld < fenetre.map.perso.score) && (fenetre.map.perso.vie != false))
 				{
 					scoreOld = fenetre.map.perso.score;
 					//On rafrachit le temps du timeout
@@ -36,12 +35,12 @@ public class main implements Valeurs{
 				else
 				{
 					//Le score stagne ou diminue
-					if( (fenetre.chrono.getTime() - timeOutSec) >= 2000)
+					if( ((fenetre.chrono.getTime() - timeOutSec) >= 2000) || (fenetre.map.perso.vie == false))
 					{
 						//On stocke le score dans la classe coucheNeuronale
 						coucheNeuronale.score = fenetre.map.perso.score;
 						//On ajoute ce réseau à la liste des résultats
-						resultat.ajout(coucheNeuronale);
+						resultat.ajout((CoucheNeuronale) coucheNeuronale.clone());
 						
 						if(resultat.CoucheNeuronaleListe.size() > 1)
 						{
@@ -53,8 +52,14 @@ public class main implements Valeurs{
 							}
 							meilleursCouche[0] = resultat.CoucheNeuronaleListe.get(0);
 							//meilleursCouche[1] = resultat.CoucheNeuronaleListe.get(1);
-							
-							coucheNeuronale.mutation(meilleursCouche, (meilleursCouche[0].score - coucheNeuronale.score) );
+							int diffScore = (meilleursCouche[0].score - coucheNeuronale.score);
+							coucheNeuronale = new CoucheNeuronale();
+							coucheNeuronale = (CoucheNeuronale) coucheNeuronale.mutation(meilleursCouche.clone(), diffScore ).clone();
+						}
+						else
+						{
+							//On crée un nouveau réseau de neurone
+							coucheNeuronale = new CoucheNeuronale();
 						}
 						if(resultat.CoucheNeuronaleListe.size() > 6)
 						{
@@ -62,14 +67,12 @@ public class main implements Valeurs{
 						}
 						
 						//On recommence le niveau 
+						fenetre.map.perso.vie = true;
 						fenetre.map.perso.posX = 0;
-						fenetre.map.perso.posY = (fenetre.map.listeBloc.get(0).posY - jumpY);
+						fenetre.map.perso.posY = (fenetre.map.listeBloc.get(0).posY - fenetre.map.perso.hauteurPerso - 2);
 						//Évite de pouvoir sauter au début
 						fenetre.map.perso.isJumping = true;
 						
-						
-						//On crée un nouveau réseau de neurone
-						coucheNeuronale = new CoucheNeuronale();
 						
 						//Met à 0 les valeurs
 						fenetre.chrono.stop();
@@ -112,7 +115,7 @@ public class main implements Valeurs{
 			fenetre.gestionDeplacementIA(sortie);
 			
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

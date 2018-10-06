@@ -65,6 +65,8 @@ public class Map implements Valeurs{
 				perso = new Personnage(bloc_temp);
 			}
 		}
+		listeBloc.remove(4);
+		listeBloc.remove(2);
 		
 		//Ajout du drapeau
 		listeBloc.add(new Bloc((bloc_temp.posX + (bloc_temp.longueur / 2)),posY,true));
@@ -97,6 +99,10 @@ public class Map implements Valeurs{
 			{
 				this.posXRelativeFenetre = x;
 			}
+		}
+		if(y >= hauteurFenetre)
+		{
+			perso.vie = false;
 		}
 		
 	}

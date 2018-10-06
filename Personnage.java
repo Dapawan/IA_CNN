@@ -18,6 +18,7 @@ public class Personnage implements Valeurs{
 	public Boolean isJumping;
 	
 	public int score;
+	public boolean vie;
 	
 	
 	public BufferedImage img[][] = new BufferedImage[2][9];
@@ -25,6 +26,7 @@ public class Personnage implements Valeurs{
 	public Personnage() {
 		
 		this.score = 0;
+		this.vie = true;
 		
 		this.posX = 0;
 		this.posY = 0;
@@ -51,8 +53,8 @@ public class Personnage implements Valeurs{
 	
 	public Personnage(Bloc bloc) {
 				
-		this.posX = bloc.posX;
-		this.posY = bloc.posY - jumpY;
+		this.vie = true;
+		
 		//Évite de pouvoir sauter au début
 		this.isJumping = true;
 		
@@ -71,6 +73,9 @@ public class Personnage implements Valeurs{
 		}
 		this.hauteurPerso = img[0][1].getHeight();
 		this.longueurPerso = img[0][1].getWidth();
+		
+		this.posX = bloc.posX;
+		this.posY = bloc.posY - this.hauteurPerso - 2;
 		
 	}
 

@@ -13,7 +13,7 @@ public class Resultat implements Comparator<CoucheNeuronale>{
 	
 	public void ajout(CoucheNeuronale coucheNeuronale)
 	{
-		this.CoucheNeuronaleListe.add(coucheNeuronale);
+		this.CoucheNeuronaleListe.add(this.CoucheNeuronaleListe.size(),coucheNeuronale);
 	}
 
 	@Override
