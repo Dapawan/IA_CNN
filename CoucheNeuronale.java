@@ -30,9 +30,9 @@ public class CoucheNeuronale implements Valeurs{
 	 *
 	 */
 	
-	private final int NBR_COUCHE = 1;
-	private final int NBR_NEURONE_PAR_COUCHE = 4;
-	private final int NBR_ENTREE_PAR_NEURONE = 4;
+	public final int NBR_COUCHE = 1;
+	public final int NBR_NEURONE_PAR_COUCHE = 4;
+	public final int NBR_ENTREE_PAR_NEURONE = 4;
 	
 	private static int numeroMutation;
 	private static boolean incrMutation;
@@ -41,12 +41,13 @@ public class CoucheNeuronale implements Valeurs{
 	
 	public int score;
 	
-	private Double[] entree;
+	public double[] entree;
 	
-	private Neurone[][] neuroneArray;
+	public Neurone[][] neuroneArray;
 	
 	public CoucheNeuronale() {
 		this.neuroneArray = new Neurone[NBR_COUCHE][NBR_NEURONE_PAR_COUCHE];
+		this.entree = new double[NBR_ENTREE_PAR_NEURONE];
 		this.score = 0;
 		for(int i = 0; i < NBR_COUCHE; i++)
 		{
@@ -58,24 +59,32 @@ public class CoucheNeuronale implements Valeurs{
 		
 	}
 	
-	public Double[] calculSortie(Double[] entree2)
+	public double[] calculSortie(double[] entree2)
 	{
-		Double[] result = new Double[NBR_ENTREE_PAR_NEURONE];
+		double[] result = new double[NBR_ENTREE_PAR_NEURONE];
+		double[] entreeTemp = new double[entree2.length];
 		//On save le vecteur d'entrée
-		this.entree = entree2;
+		for(int i = 0; i < entree2.length; i++)
+		{
+			this.entree[i] = entree2[i];
+			//Entree temporaire pour la récursivitée
+			entreeTemp[i] = entree2[i];
+		}
+		
+		
 		
 		//On parcourt toutes les neurones
 		for(int i = 0; i < NBR_COUCHE; i++)
 		{
 			for(int a = 0; a < NBR_NEURONE_PAR_COUCHE; a++)
 			{
-				this.neuroneArray[i][a].calculResult(entree2);
+				this.neuroneArray[i][a].calculResult(entreeTemp);
 			}
 			//On change le vecteur d'entree à chaque couche traitée
 			for(int x = 0; x < entree2.length; x++)
 			{
 				//On affecte les valeurs récemment calculées en entrée de la prochaine couche neuronale
-				entree2[x] = this.neuroneArray[i][x].result;
+				entreeTemp[x] = this.neuroneArray[i][x].result;
 			}
 			
 		}

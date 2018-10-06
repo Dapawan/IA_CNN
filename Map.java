@@ -27,13 +27,14 @@ public class Map implements Valeurs{
 		this.posXRelativeFenetre = 0;		
 		
 		//Init de l'img background
+		/*
 		try {
-			this.backgroundImg = ImageIO.read(new File("" + backgroundStr));
+			this.backgroundImg = ImageIO.read(new File("" + path + backgroundStr));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
 		Bloc bloc_ = new Bloc(-1, -1);
 		Bloc bloc_temp = bloc_;
 		

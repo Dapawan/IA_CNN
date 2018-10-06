@@ -36,7 +36,7 @@ public class Personnage implements Valeurs{
 			for(int i = 1; i <= 8; i++)
 			{
 				try {
-					img[a][i] = ImageIO.read(new File("C:\\Users\\Dapawan\\eclipse-workspace\\IA\\src\\mario\\images\\perso_" + imgStr[a] + i + ".png"));
+					img[a][i] = ImageIO.read(new File("" + path + "images\\perso_" + imgStr[a] + i + ".png"));
 				
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -61,7 +61,7 @@ public class Personnage implements Valeurs{
 			for(int i = 1; i <= 8; i++)
 			{
 				try {
-					img[a][i] = ImageIO.read(new File("C:\\Users\\Dapawan\\eclipse-workspace\\IA\\src\\mario\\images\\perso_" + imgStr[a] + i + ".png"));
+					img[a][i] = ImageIO.read(new File("" + path + "images\\perso_" + imgStr[a] + i + ".png"));
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

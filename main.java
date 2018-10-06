@@ -11,8 +11,8 @@ public class main implements Valeurs{
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Double entree[] = new Double[4];
-		Double sortie[];
+		double entree[] = new double[4];
+		double sortie[];
 		
 		int scoreOld = 0;
 		long timeOutSec = 0;
@@ -106,10 +106,13 @@ public class main implements Valeurs{
 			
 			sortie = coucheNeuronale.calculSortie(entree);
 			
+			fenetre.coucheNeuronale = coucheNeuronale;
+			
+			
 			fenetre.gestionDeplacementIA(sortie);
 			
 			try {
-				Thread.sleep(1);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

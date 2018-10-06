@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -17,7 +18,11 @@ public class Fenetre_ extends JFrame implements Valeurs{
 	public JPanel panel;
 	private volatile ArrayList<Integer> touche_tapee;
 	public Map map;
-
+	public CoucheNeuronale coucheNeuronale;
+	final NumberFormat instance = NumberFormat.getNumberInstance();
+	
+	
+	public double[] sortie;
 	public int compteurImg;
 	
 	public Chrono chrono;
@@ -26,7 +31,9 @@ public class Fenetre_ extends JFrame implements Valeurs{
 	public Direction direction_old;
 	
 	public Fenetre_() {
-				
+			
+		instance.setMaximumFractionDigits(2);
+		
 		this.direction = Direction.INIT;
 		this.direction_old = this.direction;
 		
@@ -117,7 +124,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		
 	}
 	
-	public void gestionDeplacementIA(Double[] sortie)
+	public void gestionDeplacementIA(double[] sortie)
 	{
 		
 		/*
@@ -293,9 +300,97 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						g.drawString("Temps : " + chrono.toString(),posXChrono,posYChrono);
 					}
 					g.drawString("Score : " + map.perso.score + " points", posXScore, posYScore);
+					
+					
+					//Dessin couche neuronale
+					if(coucheNeuronale != null)
+					{
+						dessinCoucheNeuronale(coucheNeuronale,g);
+					}
 				}
 				
 			}
+			
+			
+			public void dessinCoucheNeuronale(CoucheNeuronale coucheNeuronale,Graphics g)
+			{
+				int posX = posXCoucheNeuronale;
+				int posY = posYCoucheNeuronale;
+				int oldPosX = 0;
+				int oldPosY = 0;
+				
+				//Les entrées sont avant
+				g.setColor(Color.BLUE);
+				for(int i = 0; i < coucheNeuronale.NBR_ENTREE_PAR_NEURONE; i++)
+				{
+					g.drawRect(posX, posY, grandeurNeurone, grandeurNeurone);
+					g.drawString("" + coucheNeuronale.entree[i], posX + (grandeurNeurone / 3), posY + (grandeurNeurone / 2));
+					posY += (grandeurNeurone);
+				}
+				
+				for(int i = 0; i < coucheNeuronale.NBR_COUCHE; i++)
+				{
+					//On se décale à droite d'une couche
+					posX += (grandeurNeurone + longueurLiaisons);
+					oldPosX = posX;
+					//On retourne à la hauteur init
+					posY = posYCoucheNeuronale;
+					for(int a = 0; a < coucheNeuronale.NBR_NEURONE_PAR_COUCHE; a++)
+					{
+						g.setColor(Color.BLACK);
+						//On dessine la neurone
+						g.drawOval(posX, posY, grandeurNeurone, grandeurNeurone);
+						//On mémorise la hauteur de la neurone
+						oldPosY = posY;
+						
+						if(coucheNeuronale.neuroneArray[i][a].result >= 0.5)
+						{
+							g.setColor(resultatSupSeuil);
+						}
+						else
+						{
+							g.setColor(resultatInfSeuil);
+						}
+						g.drawString(String.format("%.2f", (float)coucheNeuronale.neuroneArray[i][a].result), posX + (grandeurNeurone / 3), posY + (grandeurNeurone / 2));
+						//On retourne à la hauteur init
+						posY = posYCoucheNeuronale;
+						for(int x = 0; x < coucheNeuronale.NBR_ENTREE_PAR_NEURONE; x++)
+						{
+							if(coucheNeuronale.neuroneArray[i][a].weight[x] > 0)
+							{
+								g.setColor(liaisonPositive);
+							}
+							else
+							{
+								g.setColor(liaisonNegative);
+							}
+							g.drawLine( (posX - longueurLiaisons), posY + (grandeurNeurone / 2), posX , oldPosY + (grandeurNeurone / 2));
+							g.drawString(String.format("%.2f", (float)coucheNeuronale.neuroneArray[i][a].weight[x]), posX - (longueurLiaisons / 2),  posY + (grandeurNeurone / 2) - 5);
+							posY += grandeurNeurone;
+						}
+						//On retourne à la posY
+						posY = oldPosY;
+						posY += grandeurNeurone;
+					}
+				}
+				/*
+				 * Bas
+				 * Gauche
+				 * Droite
+				 * Haut
+				 */
+				g.setColor(Color.BLACK);
+				posX += grandeurNeurone + 50;
+				posY = posYCoucheNeuronale + (grandeurNeurone / 2);
+				g.drawString("Bas", posX, posY);
+				g.drawString("Gauche", posX, posY + grandeurNeurone);
+				g.drawString("Droite", posX, posY + (2*grandeurNeurone));
+				g.drawString("Haut", posX, posY + (3*grandeurNeurone));
+				
+				
+			}
 	}
+	
+	
 	
 }

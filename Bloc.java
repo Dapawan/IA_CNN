@@ -24,7 +24,7 @@ public class Bloc implements Valeurs{
 		this.isFlag = false;
 		
 		try {
-			this.img = ImageIO.read(new File("C:\\Users\\Dapawan\\eclipse-workspace\\IA\\src\\mario\\images\\sol_base.png"));
+			this.img = ImageIO.read(new File("" + path + "images\\sol_base.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,7 +43,7 @@ public class Bloc implements Valeurs{
 		this.posY = posY;
 		this.isFlag = isFlag;
 		try {
-			this.img = ImageIO.read(new File("C:\\Users\\Dapawan\\eclipse-workspace\\IA\\src\\mario\\images\\flag.png"));
+			this.img = ImageIO.read(new File("" + path + "images\\flag.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

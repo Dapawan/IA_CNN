@@ -1,5 +1,6 @@
 package mario;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -11,8 +12,23 @@ public interface Valeurs {
 	int longueurFenetre = 1000;
 	
 	//Neurone
-	int biasMax = 50;//Entre - biasMax et + biasMax
-	int weightMax = 50;//de même
+	int biasMax = 0;//Entre - biasMax et + biasMax
+	int weightMax = 1;//de même
+	
+	
+	//Dessin coucheNeuronale
+	int posXCoucheNeuronale = 10;
+	int posYCoucheNeuronale = 200;
+	
+	int grandeurNeurone = 50;
+	int longueurLiaisons = 200;
+	
+	Color liaisonPositive = Color.GREEN;
+	Color liaisonNegative = Color.RED;
+	
+	Color resultatSupSeuil = Color.BLACK;
+	Color resultatInfSeuil = Color.BLUE;
+	
 	
 	
 	//Affichage temps
@@ -66,6 +82,11 @@ public interface Valeurs {
 	String imgStr[] = { "depl_gauche_", "depl_droite_"};
 	
 	//Background img
-	String backgroundStr = "C:\\\\Users\\\\Dapawan\\\\eclipse-workspace\\\\IA\\\\src\\\\mario\\\\images\\\\background_1.png";
+	String backgroundStr = "images\\background_1.png";
 	
+	
+	
+	
+	String path = new File("").getAbsolutePath() + "\\src\\mario\\";
+	//String path = new File("").getAbsolutePath() + "\\";
 }
