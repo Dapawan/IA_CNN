@@ -163,7 +163,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		else
 		{
 			result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree] += (Math.random() * (weightMax / 20));
-			if(progression > 0)
+			if(progression >= 0)
 			{
 				if(oldValue == 0)
 				{
@@ -171,10 +171,11 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 				}
 				else
 				{
-					result.neuroneArray[numeroCoucheOld][numeroNeuroneOld].weight[numeroWeightOld] += (Math.random());
+					result.neuroneArray[numeroCoucheOld][numeroNeuroneOld].weight[numeroWeightOld] += (oldValue);
 				}
 				oldValue = result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree];
 			}
+			/*
 			else
 			{
 				result.neuroneArray[numeroCoucheOld][numeroNeuroneOld].weight[numeroWeightOld] = oldValue;
@@ -189,7 +190,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 					oldValue = result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree];
 					
 				}
-			}
+			}*/
 		}
 		numeroCoucheOld = numeroCouche;
 		numeroNeuroneOld = numeroNeurone;

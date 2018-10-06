@@ -65,8 +65,16 @@ public class Map implements Valeurs{
 				perso = new Personnage(bloc_temp);
 			}
 		}
-		listeBloc.remove(4);
-		listeBloc.remove(2);
+		//On peut tout les 2 bloc faire un vide
+		int isVide = 0;
+		for(int i = 1; i < listeBloc.size(); i +=2)
+		{
+			isVide = (int)(Math.random() * 2);
+			if(isVide == 1)
+			{
+				listeBloc.remove(i);
+			}
+		}
 		
 		//Ajout du drapeau
 		listeBloc.add(new Bloc((bloc_temp.posX + (bloc_temp.longueur / 2)),posY,true));

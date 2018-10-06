@@ -11,9 +11,13 @@ public interface Valeurs {
 	int hauteurFenetre = 1080;
 	int longueurFenetre = 1000;
 	
+	//Lancement IA
+	boolean isIa = false;
+	
+	
 	//Neurone
 	int biasMax = 0;//Entre - biasMax et + biasMax
-	int weightMax = 0;//de même
+	int weightMax = 1;//de même
 	
 	
 	//Dessin coucheNeuronale
@@ -44,9 +48,10 @@ public interface Valeurs {
 	//Bloc
 	int hauteurBloc = 50;
 	int longueurBloc = 100;
-	
+	/*
 	int hauteurPerso = 50;
 	int longueurPerso = 50;
+	*/
 	
 	//Gravité
 	float g = (float) 6;
@@ -62,8 +67,8 @@ public interface Valeurs {
 	int jumpY = 200;
 	
 	//Palier création level up
-	int palierUp = 10;
-	int limitePalierUp = hauteurFenetre - 100;
+	int palierUp = 20;
+	int limitePalierUp = hauteurFenetre - 400;
 	int limitePalierDown = hauteurFenetre;
 	
 	

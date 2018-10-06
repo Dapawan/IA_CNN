@@ -78,5 +78,15 @@ public class Personnage implements Valeurs{
 		this.posY = bloc.posY - this.hauteurPerso - 2;
 		
 	}
+	
+	public void resetPosInit(Map map)
+	{
+		this.vie = true;
+		//Évite de pouvoir sauter au début
+		this.isJumping = true;
+		
+		this.posX = map.listeBloc.get(0).posX;
+		this.posY = map.listeBloc.get(0).posY - this.hauteurPerso - 2;;
+	}
 
 }

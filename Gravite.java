@@ -35,6 +35,12 @@ public class Gravite extends Thread implements Valeurs{
 			{
 				this.compteur = 0;
 			}
+			
+			if(map.perso.vie == false)
+			{
+				map.perso.resetPosInit(map);
+			}
+			
 		}
 		
 	}
