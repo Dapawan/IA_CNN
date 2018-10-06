@@ -14,10 +14,13 @@ public interface Valeurs {
 	//Lancement IA
 	boolean isIa = false;
 	
+	boolean isPlusieurIa = true;
+	int nbrIA = 5;
+	int nbrResultatStocke = 15;
 	
 	//Neurone
-	int biasMax = 0;//Entre - biasMax et + biasMax
-	int weightMax = 1;//de même
+	int biasMax = 10;//Entre - biasMax et + biasMax
+	int weightMax = 10;//de même
 	
 	
 	//Dessin coucheNeuronale
@@ -43,6 +46,9 @@ public interface Valeurs {
 	//Affichage score
 	int posXScore = posXChrono + 100;
 	int posYScore = posYChrono;
+	//Affichage perso alive
+	int posXAlive = posXScore + 100;
+	int posYAlive = posYChrono;
 	
 	int longueurLevel = 100000;
 	//Bloc

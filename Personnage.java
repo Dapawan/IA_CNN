@@ -4,10 +4,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 
-public class Personnage implements Valeurs{
+public class Personnage implements Valeurs,Comparator<Personnage>{
 	
 	public int posX;
 	public int posY;
@@ -18,7 +19,20 @@ public class Personnage implements Valeurs{
 	public Boolean isJumping;
 	
 	public int score;
+	public int scoreOld;
+	public Chrono chrono;
+	public long timeOutSec;
+	
 	public boolean vie;
+	
+	//Ajout de son IA
+	public CoucheNeuronale coucheNeuronale;
+	
+	public Direction direction;
+	public Direction directionOld;
+	
+	public int compteurImg = 0;
+	public int compteur = 0;
 	
 	
 	public BufferedImage img[][] = new BufferedImage[2][9];
@@ -53,6 +67,12 @@ public class Personnage implements Valeurs{
 	
 	public Personnage(Bloc bloc) {
 				
+		if(isPlusieurIa == true)
+		{
+			this.coucheNeuronale = new CoucheNeuronale();
+			chrono = new Chrono();
+		}
+		
 		this.vie = true;
 		
 		//Évite de pouvoir sauter au début
@@ -75,7 +95,7 @@ public class Personnage implements Valeurs{
 		this.longueurPerso = img[0][1].getWidth();
 		
 		this.posX = bloc.posX;
-		this.posY = bloc.posY - this.hauteurPerso - 2;
+		this.posY = bloc.posY - this.hauteurPerso - 10;
 		
 	}
 	
@@ -86,7 +106,13 @@ public class Personnage implements Valeurs{
 		this.isJumping = true;
 		
 		this.posX = map.listeBloc.get(0).posX;
-		this.posY = map.listeBloc.get(0).posY - this.hauteurPerso - 2;;
+		this.posY = map.listeBloc.get(0).posY - this.hauteurPerso - 10;
+	}
+
+	@Override
+	public int compare(Personnage o1, Personnage o2) {
+		// TODO Auto-generated method stub
+		return (o2.score - o1.score);
 	}
 
 }

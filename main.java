@@ -13,7 +13,7 @@ public class main implements Valeurs{
 		
 		fenetre = new Fenetre_();
 		
-		if(isIa == true)
+		if( (isIa == true) || (isPlusieurIa == true))
 		{
 			gestionIA = new GestionIA(fenetre);
 		}
@@ -22,11 +22,16 @@ public class main implements Valeurs{
 		{
 			if(isIa == true)
 			{
-				gestionIA.start();
+				gestionIA.startUneIA();
 			}
-			else
+			else if((isIa == false) && (isPlusieurIa == false))
 			{
 				fenetre.gestionDeplacementClavier();
+			}
+			else if(isPlusieurIa == true)
+			{
+				//Plusieur IA
+				gestionIA.startPlusieursIA();
 			}
 			
 			try {

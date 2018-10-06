@@ -104,6 +104,71 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		return result;
 	}
 	
+	
+	public void mutation(CoucheNeuronale[] coucheNeuronale,CoucheNeuronale coucheNeuronale_) throws CloneNotSupportedException
+	{
+		//On copie le 1er élément
+		CoucheNeuronale result = new CoucheNeuronale();
+		result = (CoucheNeuronale) coucheNeuronale[0].clone();
+		
+		for(int index = 1; index < coucheNeuronale.length; index++)
+		{
+			//On moyenne avec les autres
+			//On parcourt toutes les neurones
+			for(int i = 0; i < NBR_COUCHE; i++)
+			{
+				for(int a = 0; a < NBR_NEURONE_PAR_COUCHE; a++)
+				{
+					//On fait la somme
+					for(int x = 0; x < NBR_ENTREE_PAR_NEURONE; x++)
+					{
+						result.neuroneArray[i][a].bias[x] += coucheNeuronale[index].neuroneArray[i][a].bias[x];
+						result.neuroneArray[i][a].weight[x] += coucheNeuronale[index].neuroneArray[i][a].weight[x];
+					}
+					//On fait la moyenne
+					for(int x = 0; x < NBR_ENTREE_PAR_NEURONE; x++)
+					{
+						result.neuroneArray[i][a].bias[x] /= (NBR_ENTREE_PAR_NEURONE+1);
+						result.neuroneArray[i][a].weight[x] /= (NBR_ENTREE_PAR_NEURONE+1);
+					}
+					
+				}
+			}
+			
+		}
+		
+		//On applique une petite mutation
+		/*
+		 * On choisit une couche et une neurone
+		 * 
+		 */
+		int numeroCouche = (int) (Math.random() * NBR_COUCHE);
+		
+		int numeroNeurone = (int) (Math.random() * NBR_NEURONE_PAR_COUCHE);
+		
+		/*
+		 * On choisit quelle entrée affectée
+		 */
+		int numeroEntree = (int) (Math.random() * NBR_ENTREE_PAR_NEURONE);
+		
+		/*
+		 * On choisit bias ou weight
+		 */
+		int isBias = (int) Math.random();
+		isBias = 0;
+		
+		if(isBias == 1)
+		{
+			result.neuroneArray[numeroCouche][numeroNeurone].bias[numeroEntree] += (Math.random() * (biasMax / 20));
+		}
+		else
+		{
+			result.neuroneArray[numeroCouche][numeroNeurone].weight[numeroEntree] += (Math.random() - 0.5);
+		}
+		coucheNeuronale_ = result;
+		//return result;
+	}
+	
 	public CoucheNeuronale mutation(CoucheNeuronale[] coucheNeuronale, int progression)
 	{
 		//On copie le 1er élément

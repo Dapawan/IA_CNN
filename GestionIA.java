@@ -1,6 +1,6 @@
 package mario;
 
-public class GestionIA {
+public class GestionIA implements Valeurs{
 	
 	private CoucheNeuronale coucheNeuronale;
 	private CoucheNeuronale[] meilleursCouche = new CoucheNeuronale[1];
@@ -11,19 +11,210 @@ public class GestionIA {
 	double entree[] = new double[4];
 	double sortie[] = new double[4];
 	
-	int scoreOld = 0;
-	long timeOutSec = 0;
+	int scoreOld;
+	long timeOutSec;
+	
+	/*
+	 * Test 2 IA
+	 */
+	
+	double plusieurIAentree[][] = new double[nbrIA][4];
+	double plusieurIAsortie[][] = new double[nbrIA][4];
 	
 	
+	
+	/*
+	public GestionIA(boolean isPlusieurIA, Fenetre_ fenetre) {
+		if(isPlusieurIA == true)
+		{
+			resultat = new Resultat();
+			
+			this.fenetre = fenetre;
+			
+			
+		}
+	}*/
+	
+	public void startPlusieursIA() throws CloneNotSupportedException
+	{
+		int posX = 0;
+		int posY = 0;
+		Personnage perso;
+		CoucheNeuronale coucheNeuronale;
+		
+		if(fenetre.map.nbrPersoAlive() > 0)
+		{
+			for(int i = 0; i < nbrIA; i++)
+			{
+				perso = fenetre.map.persoListe.get(i);
+				if(perso.vie == true)
+				{
+					posX = perso.posX;
+					posY = perso.posY;
+					
+					/*
+					 * Recherche du bloc le plus proche
+					 */
+					Bloc bloc_tempo = new Bloc(-1, -1);
+					for(Bloc bloc : fenetre.map.listeBloc)
+					{
+						if( (posX + perso.longueurPerso) < bloc.posX)
+						{
+							bloc_tempo = bloc;
+							break;
+						}
+					}
+					//Vecteur d'entrée
+					plusieurIAentree[i][0] = (double) (bloc_tempo.posX - (posX + perso.longueurPerso) );
+					plusieurIAentree[i][1] = (double) (bloc_tempo.posY - (posY + perso.hauteurPerso) );
+					plusieurIAentree[i][2] = (double) 10.0;
+					plusieurIAentree[i][3] = (double) 10.0;
+					
+					//Gestion des sorties
+					coucheNeuronale = (CoucheNeuronale) perso.coucheNeuronale.clone();
+					
+					plusieurIAsortie[i] = coucheNeuronale.calculSortie(plusieurIAentree[i]);
+					
+					
+					
+					//Affecte les déplacements sur les perso
+					fenetre.gestionDeplacementIA(plusieurIAsortie[i],perso);
+					
+					
+					/*
+					 * Gestion de la progression pour éliminer les perso non fonctionnant
+					 */
+					
+					isInProgress(perso);
+				}
+				
+			}
+		}
+		else
+		{
+			//On stocke toutes les IA
+			for(int i = 0; i < nbrIA; i++)
+			{
+				perso = fenetre.map.persoListe.get(i);
+				
+				
+				//On stocke le score dans la classe coucheNeuronale
+				perso.coucheNeuronale.score = perso.score;
+				//On ajoute ce réseau à la liste des résultats
+				resultat.ajout((CoucheNeuronale) perso.coucheNeuronale.clone());
+				
+				
+				if(resultat.CoucheNeuronaleListe.size() >= nbrResultatStocke)
+				{
+					resultat.CoucheNeuronaleListe.remove(nbrResultatStocke-1);
+				}
+				
+				//On recommence le niveau 
+				perso.resetPosInit(fenetre.map);
+				
+				
+				//Met à 0 les valeurs
+				perso.chrono.stop();
+				perso.chrono.start();
+				perso.timeOutSec = 0;
+				perso.scoreOld = 0;
+			}
+			
+			if(resultat.CoucheNeuronaleListe.size() > 1)
+			{
+				System.out.println("Résultat");
+				resultat.CoucheNeuronaleListe.sort(resultat);
+				for(int a = 0; a < resultat.CoucheNeuronaleListe.size(); a++)
+				{
+					System.out.println("Score " + resultat.CoucheNeuronaleListe.get(a).score);
+				}
+				meilleursCouche[0] = (CoucheNeuronale) resultat.CoucheNeuronaleListe.get(0).clone();
+				//meilleursCouche[1] = resultat.CoucheNeuronaleListe.get(1);
+				
+			}
+			
+			for(int i = 0; i < nbrIA; i++)
+			{
+				//int diffScore = (meilleursCouche[0].score - perso.coucheNeuronale.score);
+				perso = fenetre.map.persoListe.get(i);
+				coucheNeuronale = new CoucheNeuronale();
+				perso.coucheNeuronale = new CoucheNeuronale();
+				coucheNeuronale.mutation(meilleursCouche.clone(),perso.coucheNeuronale);
+				
+			}
+		}
+		
+		fenetre.coucheNeuronale = (CoucheNeuronale) fenetre.map.persoListe.get(0).coucheNeuronale.clone();
+		
+		
+		
+		
+		
+	}
+	
+	public void isInProgress(Personnage perso) throws CloneNotSupportedException
+	{
+		if(perso.chrono != null)
+		{
+			//On regarde si le score augmente
+			if(perso.scoreOld < perso.score)
+			{
+				perso.scoreOld = perso.score;
+				//On rafrachit le temps du timeout
+				perso.timeOutSec = perso.chrono.getTime();
+			}
+			else
+			{
+				//Le score stagne ou diminue
+				if( ((perso.chrono.getTime() - perso.timeOutSec) >= 2000))
+				{
+					perso.vie = false;
+				}
+			}
+		}
+	}
+	
+	/*
+	 * 
+	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@SuppressWarnings("unused")
 	public GestionIA(Fenetre_ fenetre) {
 		this.fenetre = fenetre;
 		
-		coucheNeuronale = new CoucheNeuronale();
+		if(isPlusieurIa == false)
+		{
+			coucheNeuronale = new CoucheNeuronale();
+		}
 		
 		resultat = new Resultat();
 	}
 	
-	public void start() throws CloneNotSupportedException
+	public void startUneIA() throws CloneNotSupportedException
 	{
 		if(fenetre.chrono != null)
 		{

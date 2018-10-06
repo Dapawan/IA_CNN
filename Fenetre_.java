@@ -21,7 +21,6 @@ public class Fenetre_ extends JFrame implements Valeurs{
 	public CoucheNeuronale coucheNeuronale;
 	final NumberFormat instance = NumberFormat.getNumberInstance();
 	
-	
 	public double[] sortie;
 	public int compteurImg;
 	
@@ -122,6 +121,52 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		
 		
 		
+	}
+	public void gestionDeplacementIA(double[] sortie, Personnage perso)
+	{
+		
+		/*
+		 * 
+		 * Seuil > 0.5
+		 * Plusieurs déplacements possibles à la fois
+		 */
+		
+		int posX = perso.posX;
+		int posY = perso.posY;
+		
+		for(int i = 0; i < sortie.length; i++)
+		{
+			if(sortie[i] >= seuilDecision)
+			{
+				switch(i)
+				{
+				case 0://Bas
+					map.move(posX, (posY + vitesseY) ,perso);
+					perso.direction = Direction.DOWN;
+					break;
+					
+				case 1://Gauche
+					map.move( (posX - vitesseX), posY,perso);
+					perso.direction = Direction.LEFT;
+					break;
+					
+				case 2://Droite
+					map.move( (posX + vitesseX), posY,perso);
+					perso.direction = Direction.RIGHT;
+					break;
+					
+				case 3://Saut
+					if(perso.isJumping == false)
+					{
+						perso.isJumping = true;
+						perso.direction = Direction.UP;
+					}
+					break;
+				
+				}
+			}
+		}
+		perso.directionOld = perso.direction;
 	}
 	
 	public void gestionDeplacementIA(double[] sortie)
@@ -225,25 +270,42 @@ public class Fenetre_ extends JFrame implements Valeurs{
 			// TODO Auto-generated constructor stub
 			map = new Map();
 		}
+			@SuppressWarnings("unused")
 			@Override
 			public void paint(Graphics g) {
 				// TODO Auto-generated method stub
 				super.paint(g);
+				Personnage perso;
 				
-				
-				if( (map != null) && (map.perso != null) )
+				if(  ((map != null) && (map.perso != null)) || ((map != null) && (map.persoListe != null) && (isPlusieurIa == true)) )
 				{
 					
 					//Background
 					g.drawImage(map.backgroundImg,0,0,null);
 					
-					int xStart = map.perso.posX;//map.perso.posX - espaceX;
-					
+					int xStart = 0;
+					if(isPlusieurIa == false)
+					{
+						xStart = map.perso.posX;//map.perso.posX - espaceX;
+					}
+					else
+					{
+						//On garde le perso le plus loin
+						int posX = 0;
+						for(int i = 0; i < nbrIA; i++)
+						{
+							posX = map.persoListe.get(i).posX;
+							if(xStart < posX)
+							{
+								xStart = posX;
+							}
+						}
+					}
 					int xEnd = xStart + longueurFenetre;
 					
 					//g.setColor(Color.BLACK);
 					
-					if( (map != null) && (map.listeBloc != null) )
+					if( (map != null) && (map.listeBloc != null) && (isPlusieurIa == false))
 					{
 						for(Bloc bloc : map.listeBloc)
 						{
@@ -256,6 +318,19 @@ public class Fenetre_ extends JFrame implements Valeurs{
 
 						}
 					}
+					else if(isPlusieurIa == true)
+					{
+						for(Bloc bloc : map.listeBloc)
+						{
+							//On ne dessine que ce qui peut apparaître à l'écran
+							if( (bloc.posX >= xStart) || ( (bloc.posX + bloc.longueur) <= xEnd) )
+							{
+								//g.fillRect(bloc.posX, bloc.posY, bloc.longueur, bloc.hauteur);
+								g.drawImage(bloc.img, (bloc.posX - xStart + map.posXRelativeFenetre), bloc.posY, null);
+							}
+
+						}
+					}
 					
 					
 					//Dessin du personnage
@@ -263,50 +338,110 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					/*g.setColor(Color.BLUE);
 					
 					g.fillOval(map.perso.posX, map.perso.posY, longueurPerso, hauteurPerso);*/
-					if(direction == Direction.RIGHT)
+					
+					if(isPlusieurIa == false)
 					{
-						if(compteurImg >= 90)
+						if(direction == Direction.RIGHT)
 						{
-							compteurImg = 10;
+							if(compteurImg >= 90)
+							{
+								compteurImg = 10;
+							}
+							g.drawImage(map.perso.img[1][(compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
 						}
-						g.drawImage(map.perso.img[1][(compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
-					}
-					else if(direction == Direction.LEFT)
-					{
-						if(compteurImg >= 90)
+						else if(direction == Direction.LEFT)
 						{
-							compteurImg = 10;
+							if(compteurImg >= 90)
+							{
+								compteurImg = 10;
+							}
+							g.drawImage(map.perso.img[0][(compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
 						}
-						g.drawImage(map.perso.img[0][(compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
-					}
-					else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
-					{
-						if( (direction_old == Direction.RIGHT) || (direction_old == Direction.INIT) )
+						else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
 						{
-							g.drawImage(map.perso.img[1][1],map.posXRelativeFenetre, map.perso.posY, null);
+							if( (direction_old == Direction.RIGHT) || (direction_old == Direction.INIT) )
+							{
+								g.drawImage(map.perso.img[1][1],map.posXRelativeFenetre, map.perso.posY, null);
+							}
+							else
+							{
+								g.drawImage(map.perso.img[0][1],map.posXRelativeFenetre, map.perso.posY, null);
+							}
 						}
-						else
+						
+						//Affichage du score
+						
+						g.setColor(Color.black);
+						if(chrono != null)
 						{
-							g.drawImage(map.perso.img[0][1],map.posXRelativeFenetre, map.perso.posY, null);
+							g.drawString("Temps : " + chrono.toString(),posXChrono,posYChrono);
+						}
+						g.drawString("Score : " + map.perso.score + " points", posXScore, posYScore);
+						
+						//Dessin couche neuronale
+						if(coucheNeuronale != null)
+						{
+							dessinCoucheNeuronale(coucheNeuronale,g);
+						}
+					}
+					else
+					{
+						//Plusieur IA
+						for(int i = 0; i < nbrIA; i++)
+						{
+							perso = map.persoListe.get(i);
+							int posX = perso.posX;
+							if((perso.vie == true) && (posX >= xStart) )
+							{
+								
+								if(posX >= stopMvGauche)
+								{
+									posX = map.posXRelativeFenetre;
+								}
+								
+								if(perso.direction == Direction.RIGHT)
+								{
+									if(++perso.compteurImg >= 90)
+									{
+										perso.compteurImg = 10;
+									}
+									g.drawImage(perso.img[1][(compteurImg/10)],posX, perso.posY, null);
+								}
+								else if(perso.direction == Direction.LEFT)
+								{
+									if(++compteurImg >= 90)
+									{
+										compteurImg = 10;
+									}
+									g.drawImage(perso.img[0][(compteurImg/10)],posX, perso.posY, null);
+								}
+								else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
+								{
+									if( (perso.directionOld == Direction.RIGHT) || (perso.directionOld == Direction.INIT) )
+									{
+										g.drawImage(perso.img[1][1],posX, perso.posY, null);
+									}
+									else
+									{
+										g.drawImage(perso.img[0][1],posX, perso.posY, null);
+									}
+								}
+							}
+						}
+						
+						//Affichage nbr alive
+						g.drawString("Alive : " + map.nbrPersoAlive() + "/" + nbrIA, posXAlive, posYAlive);
+						
+						//Dessin couche neuronale
+						if(coucheNeuronale != null)
+						{
+							dessinCoucheNeuronale(coucheNeuronale,g);
 						}
 					}
 					
 					
-					//Affichage du score
-					
-					g.setColor(Color.black);
-					if(chrono != null)
-					{
-						g.drawString("Temps : " + chrono.toString(),posXChrono,posYChrono);
-					}
-					g.drawString("Score : " + map.perso.score + " points", posXScore, posYScore);
 					
 					
-					//Dessin couche neuronale
-					if(coucheNeuronale != null)
-					{
-						dessinCoucheNeuronale(coucheNeuronale,g);
-					}
 				}
 				
 			}
@@ -392,6 +527,8 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				
 				
 			}
+			
+			
 	}
 	
 	
