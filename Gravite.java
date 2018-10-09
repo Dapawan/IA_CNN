@@ -7,7 +7,6 @@ public class Gravite extends Thread implements Valeurs{
 	private int compteur;
 	
 	
-	
 	public Gravite(Map map) {
 		this.map = map;
 		this.compteur = 0;
@@ -22,7 +21,7 @@ public class Gravite extends Thread implements Valeurs{
 		{
 			if(isPlusieurIa == false)
 			{
-				map.move( map.perso.posX, (int)(map.perso.posY + 1) );
+				
 				if( (map.perso.isJumping == true) && (this.compteur <= compteurMax))
 				{
 					this.compteur++;
@@ -37,12 +36,14 @@ public class Gravite extends Thread implements Valeurs{
 				{
 					map.perso.resetPosInit(map);
 				}
+				
+				map.move( map.perso.posX, (int)(map.perso.posY + 1) );
 			}
 			else
 			{
 				int posX = 0;
 				int posY = 0;
-				Personnage perso;/*
+				/*
 				if(this.compteurMort == nbrIA)
 				{
 					//On reset tous les IA
@@ -55,34 +56,32 @@ public class Gravite extends Thread implements Valeurs{
 				}
 				else
 				{*/
-					for(int i = 0; i < nbrIA; i++)
+				for(Personnage perso : map.persoListe)
+					
+					if(perso.vie == true)
 					{
-						perso = map.persoListe.get(i);
-						if(perso.vie == true)
+						posX = perso.posX;
+						posY = perso.posY;
+						
+						
+						if( (perso.isJumping == true) && (perso.compteur <= compteurMax))
 						{
-							posX = perso.posX;
-							posY = perso.posY;
-							
-							map.move(posX, (posY + 1),perso);
-							
-							//Refresh la pos
-							perso = map.persoListe.get(i);
-							posX = perso.posX;
-							posY = perso.posY;
-							
-							if( (perso.isJumping == true) && (perso.compteur <= compteurMax))
-							{
-								perso.compteur++;
-								map.move( posX, (posY - 2) ,perso);
-							}
-							else if(perso.isJumping == false)
-							{
-								perso.compteur = 0;
-							}
+							perso.compteur++;
+							map.move( posX, (posY - 2) ,perso);
+						}
+						else if(perso.isJumping == false)
+						{
+							perso.compteur = 0;
 						}
 						
-					//}
-				}
+						posX = perso.posX;
+						posY = perso.posY;
+						
+						map.move(posX, (posY + 1),perso);
+					}
+						
+					
+				
 				
 			}
 			try {

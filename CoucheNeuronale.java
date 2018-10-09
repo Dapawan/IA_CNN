@@ -3,6 +3,8 @@ package mario;
 public class CoucheNeuronale implements Valeurs,Cloneable{
 
 	
+	
+	
 	/*
 	 * 
 	 * On aura 4 Entrées 
@@ -30,17 +32,21 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	 *
 	 */
 	
-	public final int NBR_COUCHE = 1;
-	public final int NBR_NEURONE_PAR_COUCHE = 4;
-	public final int NBR_ENTREE_PAR_NEURONE = 4;
+	public final int NBR_COUCHE = 2;
+	public final int NBR_NEURONE_PAR_COUCHE = 8;
+	public final int NBR_ENTREE_PAR_NEURONE = 8;
 	
 	private static int numeroMutation;
-	private static int numeroNeurone;
 	private static boolean incrMutation;
 	
 	private static int numeroCoucheOld;
 	private static int numeroNeuroneOld;
 	private static int numeroWeightOld;
+	
+	private static int numeroCouche;
+	private static int numeroNeurone;
+	private static int numeroWeight;
+	private static boolean isIncr;
 	
 	private static double oldValue;
 	
@@ -103,6 +109,92 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		
 		return result;
 	}
+	
+	
+	public void mutationBETA(Neurone[][] neurones,int gen) throws CloneNotSupportedException
+	{
+		/*
+		 * On copie le réseau
+		 */
+		//On parcourt toutes les neurones
+		//this.neuroneArray = new Neurone[NBR_COUCHE][NBR_NEURONE_PAR_COUCHE];
+		//this.neuroneArray = neurones.clone();
+		for(int i = 0; i < NBR_COUCHE; i++)
+		{
+			for(int a = 0; a < NBR_NEURONE_PAR_COUCHE; a++)
+			{
+				//On fait la somme
+				for(int x = 0; x < NBR_ENTREE_PAR_NEURONE; x++)
+				{
+					this.neuroneArray[i][a].weight[x] = new Double(0.0);
+					this.neuroneArray[i][a].weight[x] = (double)neurones[i][a].weight[x];
+				}
+			}
+		}
+		
+		
+		/*
+		 * On modifie directement le réseau neuronale
+		 * 
+		 * On applique 1 modif diff à chaque fois
+		 * 
+		 * Il faut donc ici 2 * NBR_ENTREE_PAR_NEURONE * NBR_NEURONE_PAR_COUCHE * NBR_COUCHE = 32 persos
+		 * 
+		 */
+		//On mémorise pour raccourcir les tests
+		//double valueWeight = this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight];
+		if(isIncr == true)
+		{
+			//if(valueWeight != 0)//Paramètre pas utile pour le moment (à muter)
+			//{
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone); 
+			/*}
+			else
+			{
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone * 2);
+			}*/
+			isIncr = false;
+			/*
+			 * Gestion du saut de neurone/couche/poids
+			 */
+			numeroWeight++;
+			if(numeroWeight >= NBR_ENTREE_PAR_NEURONE)
+			{
+				numeroWeight = 0;
+				numeroNeurone++;
+				if(numeroNeurone >= NBR_NEURONE_PAR_COUCHE)
+				{
+					numeroNeurone = 0;
+					numeroCouche++;
+					if(numeroCouche >= NBR_COUCHE)
+					{
+						numeroCouche = 0;
+						System.out.println("*** Toutes les valeurs ont déjà été modifiées !! ****");
+					}
+				}
+			}
+		}
+		else
+		{
+			//if(valueWeight != 0)
+			//{
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (incrPasNeurone);
+			/*}
+			else if(valueWeight < 0)
+			{
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (incrPasNeurone * 2);
+			}
+			else
+			{
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone * 2);
+			}*/
+			isIncr = true;
+		}
+		
+		
+		
+	}
+	
 	
 	
 	public void mutation(CoucheNeuronale[] coucheNeuronale,CoucheNeuronale coucheNeuronale_) throws CloneNotSupportedException
@@ -330,8 +422,8 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	}
 	
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	protected CoucheNeuronale clone() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
-		return super.clone();
+		return (CoucheNeuronale) super.clone();
 	}
 }

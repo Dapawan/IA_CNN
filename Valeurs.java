@@ -8,20 +8,21 @@ import javax.imageio.ImageIO;
 
 public interface Valeurs {
 
-	int hauteurFenetre = 1080;
+	int hauteurFenetre = 1000;
 	int longueurFenetre = 1000;
 	
 	//Lancement IA
 	boolean isIa = false;
 	
 	boolean isPlusieurIa = true;
-	int nbrIA = 5;
-	int nbrResultatStocke = 15;
+	int nbrIA = 128;//32;
+	int nbrResultatStocke = 2;
 	
 	//Neurone
-	int biasMax = 10;//Entre - biasMax et + biasMax
-	int weightMax = 10;//de même
-	
+	int biasMax = 1;//Entre - biasMax et + biasMax
+	int weightMax = 1;//de même
+	//Neurone inr/decr
+	float incrPasNeurone = 0.5f;
 	
 	//Dessin coucheNeuronale
 	int posXCoucheNeuronale = 10;
@@ -47,10 +48,13 @@ public interface Valeurs {
 	int posXScore = posXChrono + 100;
 	int posYScore = posYChrono;
 	//Affichage perso alive
-	int posXAlive = posXScore + 100;
+	int posXAlive = posXScore + 150;
 	int posYAlive = posYChrono;
+	//Affichage géné
+	int posXGene = posXChrono;
+	int posYGene = posYChrono + 100;
 	
-	int longueurLevel = 100000;
+	int longueurLevel = 30000;
 	//Bloc
 	int hauteurBloc = 50;
 	int longueurBloc = 100;
@@ -60,12 +64,12 @@ public interface Valeurs {
 	*/
 	
 	//Gravité
-	float g = (float) 6;
+	float g = 6;//(float) 6;
 	//Tick lié à la gravité de saut
-	int compteurMax = 80;
+	int compteurMax = 120;
 	
 	//Déplacement perso
-	int vitesseX = 1;
+	int vitesseX = 10;
 	int vitesseY = 1;
 	//Temps entre chaque déplacement perso
 	int tpsDeplacement = 1;

@@ -34,6 +34,8 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 	public int compteurImg = 0;
 	public int compteur = 0;
 	
+	public Gravite gravite;
+	
 	
 	public BufferedImage img[][] = new BufferedImage[2][9];
 	
@@ -65,12 +67,12 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 		
 	}
 	
-	public Personnage(Bloc bloc) {
+	public Personnage(Bloc bloc,Map map) {
 				
 		if(isPlusieurIa == true)
 		{
 			this.coucheNeuronale = new CoucheNeuronale();
-			chrono = new Chrono();
+			this.chrono = new Chrono();
 		}
 		
 		this.vie = true;

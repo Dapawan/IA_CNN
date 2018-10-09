@@ -1,6 +1,8 @@
 package mario;
 
-public class Neurone implements Valeurs{
+import java.util.Arrays;
+
+public class Neurone implements Valeurs,Cloneable{
 	
 	public double[] bias;
 	public double[] weight;
@@ -60,5 +62,41 @@ public class Neurone implements Valeurs{
 		return result;
 		
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(bias);
+		result = prime * result + Arrays.hashCode(weight);
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * Equals sur bias & poids
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Neurone other = (Neurone) obj;
+		if (!Arrays.equals(bias, other.bias))
+			return false;
+		if (!Arrays.equals(weight, other.weight))
+			return false;
+		return true;
+	}
+	@Override
+	protected Neurone clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return (Neurone) super.clone();
+	}
+	
 
 }

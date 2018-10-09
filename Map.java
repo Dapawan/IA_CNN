@@ -20,7 +20,7 @@ public class Map implements Valeurs{
 	public int posXRelativeFenetre;
 	
 	public BufferedImage backgroundImg;
-	
+	public int compteurGeneration;
 	
 	@SuppressWarnings("unused")
 	public Map() {
@@ -67,7 +67,7 @@ public class Map implements Valeurs{
 			{
 				if(perso == null)
 				{
-					perso = new Personnage(bloc_temp);
+					perso = new Personnage(bloc_temp,this);
 				}
 			}
 			else
@@ -78,7 +78,7 @@ public class Map implements Valeurs{
 					persoListe = new ArrayList<>();
 					for(int i = 0; i < nbrIA; i++)
 					{
-						persoListe.add(new Personnage(bloc_temp));
+						persoListe.add(new Personnage(bloc_temp, this));
 					}
 				}
 			}
@@ -100,10 +100,11 @@ public class Map implements Valeurs{
 		listeBloc.add(new Bloc((bloc_temp.posX + (bloc_temp.longueur / 2)),posY,true));
 		
 		//listeBloc.add(new Bloc(500,500));
-		
+
 		gravite = new Gravite(this);
 		
 		gravite.start();
+	
 		
 	}
 	
@@ -128,7 +129,7 @@ public class Map implements Valeurs{
 				this.posXRelativeFenetre = x;
 			}
 		}
-		if( (y >= hauteurFenetre) && perso.vie == true)
+		if( (y >= hauteurFenetre) && (perso.vie == true))
 		{
 			perso.vie = false;
 		}
@@ -155,7 +156,7 @@ public class Map implements Valeurs{
 				this.posXRelativeFenetre = x;
 			}
 		}
-		if( (y >= hauteurFenetre) && perso.vie == true)
+		if( (y >= hauteurFenetre) && (perso.vie == true))
 		{
 			perso.vie = false;
 		}
@@ -168,6 +169,7 @@ public class Map implements Valeurs{
 		Bloc latestBloc = null;
 		for(Bloc bloc : listeBloc)
 		{
+			
 			//Collision en bas à droite
 			if( ( (( (NewposX + perso.longueurPerso) >= bloc.posX) && (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur) ) && 
 					(((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) ) ) )
@@ -182,7 +184,7 @@ public class Map implements Valeurs{
 					((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
 			{
 				//On touche le sol
-				perso.isJumping = false;
+				//perso.isJumping = false;
 				
 				result = true;
 			}
@@ -201,6 +203,10 @@ public class Map implements Valeurs{
 			}
 			if(result == true)
 			{
+				if((perso.isJumping == false) && (NewposY > bloc.posY))
+				{
+					perso.isJumping = true;
+				}
 				latestBloc = bloc;
 				break;
 			}
@@ -217,6 +223,8 @@ public class Map implements Valeurs{
 				this.stopGame = true;
 			}
 		}
+		
+		
 		
 		return result;
 	}
@@ -260,6 +268,10 @@ public class Map implements Valeurs{
 			}
 			if(result == true)
 			{
+				if((perso.isJumping == false) && (NewposY > bloc.posY))
+				{
+					perso.isJumping = true;
+				}
 				latestBloc = bloc;
 				break;
 			}

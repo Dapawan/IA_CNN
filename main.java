@@ -35,7 +35,7 @@ public class main implements Valeurs{
 			}
 			
 			try {
-				Thread.sleep(1);
+				Thread.sleep(30);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -51,6 +51,14 @@ public class main implements Valeurs{
 			System.out.println("****Résultats*****");
 			System.out.println("");
 			System.out.println(gestionIA.resultat.CoucheNeuronaleListe.get(0).toString());
+		}
+		else if(isPlusieurIa == true)
+		{
+			/*
+			System.out.println("****Résultats*****");
+			System.out.println("");
+			System.out.println(gestionIA.resultat.CoucheNeuronaleListe.get(0).toString());*/
+
 		}
 		
 		

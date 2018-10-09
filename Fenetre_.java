@@ -24,6 +24,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 	public double[] sortie;
 	public int compteurImg;
 	
+	
 	public Chrono chrono;
 	
 	public Direction direction;
@@ -133,6 +134,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		
 		int posX = perso.posX;
 		int posY = perso.posY;
+		
 		
 		for(int i = 0; i < sortie.length; i++)
 		{
@@ -300,6 +302,13 @@ public class Fenetre_ extends JFrame implements Valeurs{
 								xStart = posX;
 							}
 						}
+						
+						g.setColor(Color.black);
+						if(chrono != null)
+						{
+							g.drawString("Temps : " + chrono.toString(),posXChrono,posYChrono);
+						}
+						g.drawString("Score : " + xStart + " points", posXScore, posYScore);
 					}
 					int xEnd = xStart + longueurFenetre;
 					
@@ -391,7 +400,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						{
 							perso = map.persoListe.get(i);
 							int posX = perso.posX;
-							if((perso.vie == true) && (posX >= xStart) )
+							if((perso.vie == true) && (posX >= (xStart)) )
 							{
 								
 								if(posX >= stopMvGauche)
@@ -431,6 +440,11 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						
 						//Affichage nbr alive
 						g.drawString("Alive : " + map.nbrPersoAlive() + "/" + nbrIA, posXAlive, posYAlive);
+						//Affichage génération
+						g.drawString("Gen : " + map.compteurGeneration , posXGene, posYGene);
+						
+						
+						
 						
 						//Dessin couche neuronale
 						if(coucheNeuronale != null)

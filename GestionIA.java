@@ -12,14 +12,16 @@ public class GestionIA implements Valeurs{
 	double sortie[] = new double[4];
 	
 	int scoreOld;
+	int compteurScoreOld;
 	long timeOutSec;
+	
 	
 	/*
 	 * Test 2 IA
 	 */
 	
-	double plusieurIAentree[][] = new double[nbrIA][4];
-	double plusieurIAsortie[][] = new double[nbrIA][4];
+	double plusieurIAentree[][] = new double[nbrIA][8];
+	double plusieurIAsortie[][] = new double[nbrIA][8];
 	
 	
 	
@@ -42,6 +44,13 @@ public class GestionIA implements Valeurs{
 		Personnage perso;
 		CoucheNeuronale coucheNeuronale;
 		
+		
+		
+		if(meilleursCouche[0] != null)
+		{
+			scoreOld = meilleursCouche[0].score;
+		}
+		
 		if(fenetre.map.nbrPersoAlive() > 0)
 		{
 			for(int i = 0; i < nbrIA; i++)
@@ -52,9 +61,19 @@ public class GestionIA implements Valeurs{
 					posX = perso.posX;
 					posY = perso.posY;
 					
+					if(posX >= (longueurLevel - longueurBloc))
+					{
+						//Niveau finit
+						System.out.println("**FINISH");
+						System.out.println(perso.coucheNeuronale.toString());
+						fenetre.map.stopGame = true;
+					}
+					
+					
 					/*
 					 * Recherche du bloc le plus proche
 					 */
+					int index = 0;
 					Bloc bloc_tempo = new Bloc(-1, -1);
 					for(Bloc bloc : fenetre.map.listeBloc)
 					{
@@ -63,18 +82,25 @@ public class GestionIA implements Valeurs{
 							bloc_tempo = bloc;
 							break;
 						}
+						index++;
 					}
 					//Vecteur d'entrée
-					plusieurIAentree[i][0] = (double) (bloc_tempo.posX - (posX + perso.longueurPerso) );
+					plusieurIAentree[i][0] = (double) (bloc_tempo.posX - (posX) );
 					plusieurIAentree[i][1] = (double) (bloc_tempo.posY - (posY + perso.hauteurPerso) );
-					plusieurIAentree[i][2] = (double) 10.0;
-					plusieurIAentree[i][3] = (double) 10.0;
+					plusieurIAentree[i][2] = (double) plusieurIAentree[i][0] + bloc_tempo.longueur;
+					plusieurIAentree[i][3] = (double) plusieurIAentree[i][1] + bloc_tempo.hauteur;
+					
+					plusieurIAentree[i][4] = (double) (fenetre.map.listeBloc.get(index).posX - (posX) );
+					plusieurIAentree[i][5] = (double) (fenetre.map.listeBloc.get(index).posY - (posY + perso.hauteurPerso) );
+					plusieurIAentree[i][6] = (double) plusieurIAentree[i][0] + fenetre.map.listeBloc.get(index).longueur;
+					plusieurIAentree[i][7] = (double) plusieurIAentree[i][1] + fenetre.map.listeBloc.get(index).hauteur;
 					
 					//Gestion des sorties
 					coucheNeuronale = (CoucheNeuronale) perso.coucheNeuronale.clone();
+					//coucheNeuronale = new CoucheNeuronale();
 					
 					plusieurIAsortie[i] = coucheNeuronale.calculSortie(plusieurIAentree[i]);
-					
+				
 					
 					
 					//Affecte les déplacements sur les perso
@@ -89,9 +115,31 @@ public class GestionIA implements Valeurs{
 				}
 				
 			}
+			fenetre.coucheNeuronale = (CoucheNeuronale) fenetre.map.persoListe.get(0).coucheNeuronale;
 		}
 		else
 		{
+			Personnage perso_;
+			
+			/*
+			System.out.println("AVANT mutation");
+			for(int i = 0; i < (nbrIA-1); i++)
+			{
+				//On regarde s'ils sont différents
+				perso = fenetre.map.persoListe.get(i);
+				perso_ = fenetre.map.persoListe.get(i+1);
+				
+				if(perso.coucheNeuronale.neuroneArray.equals(perso_.coucheNeuronale.neuroneArray)==true)
+				{
+					System.out.println("Perso " + i + " et Perso " + (i+1) + " IDENTIQUES");
+				}
+				else
+				{
+					System.out.println("Perso " + i + " et Perso " + (i+1) + " differents");
+				}
+			}
+			*/
+			
 			//On stocke toutes les IA
 			for(int i = 0; i < nbrIA; i++)
 			{
@@ -103,11 +151,6 @@ public class GestionIA implements Valeurs{
 				//On ajoute ce réseau à la liste des résultats
 				resultat.ajout((CoucheNeuronale) perso.coucheNeuronale.clone());
 				
-				
-				if(resultat.CoucheNeuronaleListe.size() >= nbrResultatStocke)
-				{
-					resultat.CoucheNeuronaleListe.remove(nbrResultatStocke-1);
-				}
 				
 				//On recommence le niveau 
 				perso.resetPosInit(fenetre.map);
@@ -124,7 +167,7 @@ public class GestionIA implements Valeurs{
 			{
 				System.out.println("Résultat");
 				resultat.CoucheNeuronaleListe.sort(resultat);
-				for(int a = 0; a < resultat.CoucheNeuronaleListe.size(); a++)
+				for(int a = 0; a <= nbrResultatStocke; a++)
 				{
 					System.out.println("Score " + resultat.CoucheNeuronaleListe.get(a).score);
 				}
@@ -132,20 +175,73 @@ public class GestionIA implements Valeurs{
 				//meilleursCouche[1] = resultat.CoucheNeuronaleListe.get(1);
 				
 			}
+			while(resultat.CoucheNeuronaleListe.size() >= nbrResultatStocke)
+			{
+				resultat.CoucheNeuronaleListe.remove(nbrResultatStocke-1);
+			}
 			
 			for(int i = 0; i < nbrIA; i++)
 			{
 				//int diffScore = (meilleursCouche[0].score - perso.coucheNeuronale.score);
 				perso = fenetre.map.persoListe.get(i);
-				coucheNeuronale = new CoucheNeuronale();
 				perso.coucheNeuronale = new CoucheNeuronale();
-				coucheNeuronale.mutation(meilleursCouche.clone(),perso.coucheNeuronale);
+				//coucheNeuronale = new CoucheNeuronale();
+				//coucheNeuronale.neuroneArray = resultat.CoucheNeuronaleListe.get(0).neuroneArray.clone();
+				//perso.coucheNeuronale = new CoucheNeuronale();
+				//coucheNeuronale.mutation(meilleursCouche.clone(),perso.coucheNeuronale);
+				perso.coucheNeuronale.mutationBETA(meilleursCouche[0].neuroneArray,fenetre.map.compteurGeneration);
 				
 			}
+			fenetre.map.compteurGeneration++;
+			
+			
+			if(meilleursCouche[0] != null) 
+			{
+				if(scoreOld <= meilleursCouche[0].score)
+				{
+					//Score stagne
+					compteurScoreOld++;
+					if(compteurScoreOld >= 8)
+					{
+						System.out.println("RESET DES IA");
+					
+						for(int i = 0; i < nbrIA; i++)
+						{
+							perso = fenetre.map.persoListe.get(i);
+							perso.coucheNeuronale = new CoucheNeuronale();
+						}
+						scoreOld = 1000000;//eviter la réentrance
+						compteurScoreOld = 0;
+					}
+				}
+			}
+			
+			//fenetre.coucheNeuronale = (CoucheNeuronale) resultat.CoucheNeuronaleListe.get(0);
+			/*
+			System.out.println("APRES mutation");
+			for(int i = 0; i < (nbrIA-1); i++)
+			{
+				//On regarde s'ils sont différents
+				perso = fenetre.map.persoListe.get(i);
+				perso_ = fenetre.map.persoListe.get(i+1);
+				
+				if(perso.coucheNeuronale.neuroneArray.equals(perso_.coucheNeuronale.neuroneArray)==true)
+				{
+					System.out.println("Perso " + i + " et Perso " + (i+1) + " IDENTIQUES");
+				}
+				else
+				{
+					System.out.println("Perso " + i + " et Perso " + (i+1) + " differents");
+				}
+			}*/
+			
+			
 		}
 		
-		fenetre.coucheNeuronale = (CoucheNeuronale) fenetre.map.persoListe.get(0).coucheNeuronale.clone();
-		
+		if(resultat != null)
+		{
+			//fenetre.coucheNeuronale = (CoucheNeuronale) resultat.CoucheNeuronaleListe.get(0);
+		}
 		
 		
 		
@@ -294,8 +390,8 @@ public class GestionIA implements Valeurs{
 		entree[0] = (double) (bloc_tempo.posX - (fenetre.map.perso.posX + fenetre.map.perso.longueurPerso) );
 		entree[1] = (double) (bloc_tempo.posY - (fenetre.map.perso.posY + fenetre.map.perso.hauteurPerso) );
 		
-		entree[2] = 0.0;
-		entree[3] = 0.0;
+		entree[2] = entree[0] + bloc_tempo.longueur;
+		entree[3] = entree[1] + bloc_tempo.hauteur;
 		
 		//entree[2] = (double) bloc_tempo.posX;
 		//entree[3] = (double) bloc_tempo.posY;
