@@ -32,9 +32,9 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	 *
 	 */
 	
-	public final int NBR_COUCHE = 2;
-	public final int NBR_NEURONE_PAR_COUCHE = 8;
-	public final int NBR_ENTREE_PAR_NEURONE = 8;
+	public final int NBR_COUCHE = 1;
+	public final int NBR_NEURONE_PAR_COUCHE = 4;
+	public final int NBR_ENTREE_PAR_NEURONE = 4;
 	
 	private static int numeroMutation;
 	private static boolean incrMutation;
@@ -73,7 +73,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	
 	public double[] calculSortie(double[] entree2)
 	{
-		double[] result = new double[NBR_ENTREE_PAR_NEURONE];
+		double[] result = new double[NBR_NEURONE_PAR_COUCHE];
 		double[] entreeTemp = new double[entree2.length];
 		//On save le vecteur d'entrée
 		for(int i = 0; i < entree2.length; i++)
@@ -111,7 +111,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	}
 	
 	
-	public void mutationBETA(Neurone[][] neurones,int gen) throws CloneNotSupportedException
+	public void mutationBETA(Neurone[][] neurones,int gen,float multiplicateur) throws CloneNotSupportedException
 	{
 		/*
 		 * On copie le réseau
@@ -147,7 +147,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		{
 			//if(valueWeight != 0)//Paramètre pas utile pour le moment (à muter)
 			//{
-				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone); 
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (multiplicateur * incrPasNeurone); 
 			/*}
 			else
 			{
@@ -158,7 +158,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 			 * Gestion du saut de neurone/couche/poids
 			 */
 			numeroWeight++;
-			if(numeroWeight >= NBR_ENTREE_PAR_NEURONE)
+			if(numeroWeight >= 4)
 			{
 				numeroWeight = 0;
 				numeroNeurone++;
@@ -178,7 +178,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		{
 			//if(valueWeight != 0)
 			//{
-				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (incrPasNeurone);
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (multiplicateur * incrPasNeurone);
 			/*}
 			else if(valueWeight < 0)
 			{

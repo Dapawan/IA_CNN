@@ -12,9 +12,14 @@ public class Map implements Valeurs{
 	
 	public boolean stopGame;
 	public ArrayList<Bloc> listeBloc;
+	//public ArrayList<Bloc> listeBlocTrieX;
+	
 	public Personnage perso;
 	
 	public ArrayList<Personnage> persoListe;
+	
+	public Intervalle intervalle = new Intervalle();
+	public Intervalle intervalleTemp = new Intervalle();
 	
 	private Gravite gravite;
 	public int posXRelativeFenetre;
@@ -87,7 +92,7 @@ public class Map implements Valeurs{
 		}
 		//On peut tout les 2 bloc faire un vide
 		int isVide = 0;
-		for(int i = 1; i < (listeBloc.size() - 1); i +=2)
+		for(int i = 1; i < (listeBloc.size() - 1); i +=1)
 		{
 			isVide = (int)(Math.random() * 2);
 			if(isVide == 1)
@@ -101,12 +106,42 @@ public class Map implements Valeurs{
 		
 		//listeBloc.add(new Bloc(500,500));
 
-		gravite = new Gravite(this);
+		/*gravite = new Gravite(this);
 		
-		gravite.start();
+		gravite.start();*/
+		
+		
 	
 		
 	}
+	
+	//La synchro évite l'accès à plusieurs thread en même temps
+		public synchronized void move(int x, int y,Personnage perso,Direction direction)
+		{
+			if( (collision(x, y,perso,direction) == false) && (x >= 0) && (y >= 0) && (perso.vie == true))
+			{
+				perso.posX = x;
+				perso.posY = y;
+				
+				//Le score est la distance parcourue
+				perso.score = x;
+				
+				//On bloque le déplacement à droite à ce seuil
+				if(x >= stopMvGauche)
+				{
+					this.posXRelativeFenetre = stopMvGauche;
+				}
+				else
+				{
+					this.posXRelativeFenetre = x;
+				}
+			}
+			if( (y >= hauteurFenetre) && (perso.vie == true))
+			{
+				perso.vie = false;
+			}
+			
+		}
 	
 	//La synchro évite l'accès à plusieurs thread en même temps
 	public synchronized void move(int x, int y)
@@ -184,7 +219,7 @@ public class Map implements Valeurs{
 					((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
 			{
 				//On touche le sol
-				//perso.isJumping = false;
+				perso.isJumping = false;
 				
 				result = true;
 			}
@@ -229,51 +264,177 @@ public class Map implements Valeurs{
 		return result;
 	}
 	
+	
+	
+	/*
+	 * On ne test que les blocs proches en x (réduire le temps de boucle)
+	 */
+
+	public boolean collision(int NewposX, int NewposY, Personnage perso, Direction direction)
+	{
+		boolean result = false;
+		Bloc latestBloc = null;
+
+		int posXOld = perso.posX;
+		int posYOld = perso.posY;
+		
+		perso.directionOld = direction;
+		
+		for(Bloc bloc : listeBloc)
+		{
+			
+			if( NewposX >= (bloc.posX - perso.longueurPerso) )
+			{
+				switch(direction)
+				{
+				case DOWN:
+					//On regarde si collision sous les pieds
+					intervalle.intervalleDebut = bloc.posX;
+					intervalle.intervalleFin = bloc.posX + bloc.longueur;
+					
+					intervalleTemp.intervalleDebut = NewposX;
+					intervalleTemp.intervalleFin = NewposX + perso.longueurPerso;
+					
+					
+					if(intervalle.isIn(intervalleTemp) == true)
+					{
+						intervalle.intervalleDebut = bloc.posY;
+						intervalle.intervalleFin = bloc.posY + bloc.hauteur;
+						if( intervalle.isIn(NewposY + perso.hauteurPerso) == true)
+						{
+							perso.isJumping = false;
+							if(perso.directionOld != direction)
+							{
+								//System.out.println("DOWN");
+							}
+							result = true;
+							return result;
+						}
+					}
+					
+						break;
+				case INIT:
+					break;
+				case LEFT:
+					//On regarde si collision à gauche
+					intervalle.intervalleDebut = bloc.posX;
+					intervalle.intervalleFin = bloc.posX + bloc.longueur;
+					
+					intervalleTemp.intervalleDebut = NewposX;
+					intervalleTemp.intervalleFin = NewposX + perso.longueurPerso;
+					if(intervalle.isIn(intervalleTemp) == true)
+					{
+						intervalle.intervalleDebut = bloc.posY;
+						intervalle.intervalleFin = bloc.posY + bloc.hauteur;
+						
+						intervalleTemp.intervalleDebut = NewposY;
+						intervalleTemp.intervalleFin = NewposY + perso.hauteurPerso;
+						if(intervalle.isIn(intervalleTemp) == true)
+						{
+							if(perso.directionOld != direction)
+							{
+								//System.out.println("LEFT");
+							}
+							result = true;
+							return result;
+						}
+						
+					}
+					
+					break;
+				case RIGHT:
+					//On regarde si collision à gauche
+					intervalle.intervalleDebut = bloc.posX;
+					intervalle.intervalleFin = bloc.posX + bloc.longueur;
+					
+					intervalleTemp.intervalleDebut = NewposX;
+					intervalleTemp.intervalleFin = NewposX + perso.longueurPerso;
+					if(intervalle.isIn(intervalleTemp) == true)
+					{
+						intervalle.intervalleDebut = bloc.posY;
+						intervalle.intervalleFin = bloc.posY + bloc.hauteur;
+						
+						intervalleTemp.intervalleDebut = NewposY;
+						intervalleTemp.intervalleFin = NewposY + perso.hauteurPerso;
+						if(intervalle.isIn(intervalleTemp) == true)
+						{
+							if(perso.directionOld != direction)
+							{
+								//System.out.println("RIGHT");
+							}
+							result = true;
+							return result;
+						}
+						
+					}
+					break;
+				case UP:
+					break;
+				default:
+					break;
+				
+				}
+			}
+		}
+		
+		
+		
+		return result;
+		
+	}
+	
+	
+	/*
+	 * On ne test que les blocs proches en x (réduire le temps de boucle)
+	 */
 	public boolean collision(int NewposX, int NewposY, Personnage perso)
 	{
 		boolean result = false;
 		Bloc latestBloc = null;
 		for(Bloc bloc : listeBloc)
 		{
-			//Collision en bas à droite
-			if( ( (( (NewposX + perso.longueurPerso) >= bloc.posX) && (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur) ) && 
-					(((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) ) ) )
+			if( NewposX >= (bloc.posX - perso.longueurPerso)  && (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur) )
 			{
-				//On touche le sol
-				perso.isJumping = false;
-				
-				result = true;
-			}
-			//Collision en bas à gauche
-			else if( ((NewposX) >= bloc.posX) && ((NewposX) <= (bloc.posX + bloc.longueur))  && 
-					((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
-			{
-				//On touche le sol
-				perso.isJumping = false;
-				
-				result = true;
-			}
-			//Collision en haut à gauche
-			else if(((NewposX) >= bloc.posX) && ((NewposX) <= (bloc.posX + bloc.longueur))  && 
-					((NewposY) >= (bloc.posY)) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
-			{
-				result = true;
-			}
-			
-			//Collision en haut à droite
-			else if( ( (NewposX + perso.longueurPerso) >= bloc.posX) && ( (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur))  && 
-					((NewposY) >= (bloc.posY)) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
-			{
-				result = true;
-			}
-			if(result == true)
-			{
-				if((perso.isJumping == false) && (NewposY > bloc.posY))
+				//Collision en bas à droite
+				if( ( (( (NewposX + perso.longueurPerso) >= bloc.posX) && (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur) ) && 
+						(((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) ) ) )
 				{
-					perso.isJumping = true;
+					//On touche le sol
+					perso.isJumping = false;
+					
+					result = true;
 				}
-				latestBloc = bloc;
-				break;
+				//Collision en bas à gauche
+				else if( ((NewposX) >= bloc.posX) && ((NewposX) <= (bloc.posX + bloc.longueur))  && 
+						((NewposY + perso.hauteurPerso) >= bloc.posY) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
+				{
+					//On touche le sol
+					perso.isJumping = false;
+					
+					result = true;
+				}
+				//Collision en haut à gauche
+				else if(((NewposX) >= bloc.posX) && ((NewposX) <= (bloc.posX + bloc.longueur))  && 
+						((NewposY) >= (bloc.posY)) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
+				{
+					result = true;
+				}
+				
+				//Collision en haut à droite
+				else if( ( (NewposX + perso.longueurPerso) >= bloc.posX) && ( (NewposX + perso.longueurPerso) <= (bloc.posX + bloc.longueur))  && 
+						((NewposY) >= (bloc.posY)) && ( (NewposY) <= (bloc.posY + bloc.hauteur) ) )
+				{
+					result = true;
+				}
+				if(result == true)
+				{
+					if((perso.isJumping == false) && (NewposY > bloc.posY))
+					{
+						perso.isJumping = true;
+					}
+					latestBloc = bloc;
+					break;
+				}
 			}
 			
 		}
@@ -288,7 +449,7 @@ public class Map implements Valeurs{
 				this.stopGame = true;
 			}
 		}
-		
+				
 		return result;
 	}
 	

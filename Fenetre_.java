@@ -23,7 +23,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 	
 	public double[] sortie;
 	public int compteurImg;
-	
+	public Graph graph;
 	
 	public Chrono chrono;
 	
@@ -33,6 +33,8 @@ public class Fenetre_ extends JFrame implements Valeurs{
 	public Fenetre_() {
 			
 		instance.setMaximumFractionDigits(2);
+		
+		graph = new Graph();
 		
 		this.direction = Direction.INIT;
 		this.direction_old = this.direction;
@@ -143,25 +145,30 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				switch(i)
 				{
 				case 0://Bas
-					map.move(posX, (posY + vitesseY) ,perso);
 					perso.direction = Direction.DOWN;
+					//Arrête le jump
+					perso.isJumping = false;
+					map.move(posX, (posY + vitesseY) ,perso,Direction.DOWN);
 					break;
 					
 				case 1://Gauche
-					map.move( (posX - vitesseX), posY,perso);
 					perso.direction = Direction.LEFT;
+					map.move( (posX - vitesseX), posY,perso,Direction.LEFT);
 					break;
 					
 				case 2://Droite
-					map.move( (posX + vitesseX), posY,perso);
 					perso.direction = Direction.RIGHT;
+					map.move( (posX + vitesseX), posY,perso,Direction.RIGHT);
 					break;
 					
 				case 3://Saut
 					if(perso.isJumping == false)
 					{
-						perso.isJumping = true;
-						perso.direction = Direction.UP;
+						if(map.collision(posX, posY+1, perso,Direction.DOWN) == true)
+						{
+							perso.isJumping = true;
+							perso.direction = Direction.UP;
+						}
 					}
 					break;
 				
@@ -249,9 +256,64 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				}
 				if(touche == KeyEvent.VK_DOWN)
 				{
+					//Arrête le jump
+					map.perso.compteur = compteurMax;
 					map.move(posX, (posY + vitesseY) );
 				}
 				this.direction_old = this.direction;
+
+			}
+		}
+		try {
+			Thread.sleep(tpsDeplacement);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public synchronized void gestionDeplacementClavier(Personnage perso)
+	{
+		int posX;
+		int posY;
+		
+		if( (touche_tapee != null) && (map != null) )
+		{			
+			for(Integer touche : touche_tapee)
+			{
+				posX = perso.posX;
+				posY = perso.posY;
+				
+				if(touche == KeyEvent.VK_LEFT)
+				{
+					perso.direction = Direction.LEFT;
+					map.move( (posX - vitesseX), posY,perso,perso.direction);
+				}
+				if(touche == KeyEvent.VK_RIGHT)
+				{
+					perso.direction = Direction.RIGHT;
+					//System.out.println("Depl droite");
+					map.move( (posX + vitesseX), posY,perso,perso.direction);
+				}
+				//Jump
+				if( (touche == KeyEvent.VK_UP) && (perso.isJumping == false))
+				{
+					if(map.collision(posX, posY+1, perso,Direction.DOWN) == true)
+					{
+						perso.isJumping = true;
+					}
+					//map.move(posX, (posY - jumpY) );					
+				}
+				if(touche == KeyEvent.VK_DOWN)
+				{
+					perso.direction = Direction.DOWN;
+					perso.isJumping = false;
+					map.move(posX, (posY + vitesseY) ,perso,perso.direction);
+				}
+				
+			
+				perso.directionOld = perso.direction;
 
 			}
 		}
@@ -279,13 +341,15 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				super.paint(g);
 				Personnage perso;
 				
+				
+				
 				if(  ((map != null) && (map.perso != null)) || ((map != null) && (map.persoListe != null) && (isPlusieurIa == true)) )
 				{
 					
 					//Background
 					g.drawImage(map.backgroundImg,0,0,null);
-					
-					int xStart = 0;
+					graph.dessin(g);
+					int xStart = -1;
 					if(isPlusieurIa == false)
 					{
 						xStart = map.perso.posX;//map.perso.posX - espaceX;
@@ -294,13 +358,27 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					{
 						//On garde le perso le plus loin
 						int posX = 0;
+						
 						for(int i = 0; i < nbrIA; i++)
 						{
 							posX = map.persoListe.get(i).posX;
-							if(xStart < posX)
+							if( (xStart < posX) && (map.persoListe.get(i).vie == true))
 							{
 								xStart = posX;
 							}
+						}
+						if( (isFocusPlayer == true) && (map.persoListe.get(0).vie == true) )
+						{
+							xStart = map.persoListe.get(0).posX;
+						}
+						//On s'occupe du blocage à gauche
+						if(xStart >= stopMvGauche)
+						{
+							xStart -= stopMvGauche;
+						}
+						else
+						{
+							xStart = 0;
 						}
 						
 						g.setColor(Color.black);
@@ -335,7 +413,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 							if( (bloc.posX >= xStart) || ( (bloc.posX + bloc.longueur) <= xEnd) )
 							{
 								//g.fillRect(bloc.posX, bloc.posY, bloc.longueur, bloc.hauteur);
-								g.drawImage(bloc.img, (bloc.posX - xStart + map.posXRelativeFenetre), bloc.posY, null);
+								g.drawImage(bloc.img, (bloc.posX - xStart), bloc.posY, null);
 							}
 
 						}
@@ -400,12 +478,20 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						{
 							perso = map.persoListe.get(i);
 							int posX = perso.posX;
-							if((perso.vie == true) && (posX >= (xStart)) )
+							if((perso.vie == true) && (posX >= (xStart) && (posX <= xEnd) ))
 							{
-								
-								if(posX >= stopMvGauche)
+								//
+								posX -= (xStart);
+								if(posX >= stopMvGauche && isFocusPlayer == false) 
 								{
-									posX = map.posXRelativeFenetre;
+									
+									posX = stopMvGauche;
+								}
+								
+								if(isFocusPlayer == true)
+								{
+									g.setColor(Color.BLACK);
+									g.drawString("" + i, posX + (perso.longueurPerso/2), perso.posY - 10);
 								}
 								
 								if(perso.direction == Direction.RIGHT)

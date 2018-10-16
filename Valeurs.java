@@ -11,18 +11,25 @@ public interface Valeurs {
 	int hauteurFenetre = 1000;
 	int longueurFenetre = 1000;
 	
+	//Focus perso player
+	boolean isFocusPlayer = true;
+	
 	//Lancement IA
 	boolean isIa = false;
+	//Reprise ancien resultat
+	boolean ancienResult = true;
 	
 	boolean isPlusieurIa = true;
-	int nbrIA = 128;//32;
+	int nbrIA = 3;//32;
 	int nbrResultatStocke = 2;
 	
 	//Neurone
-	int biasMax = 1;//Entre - biasMax et + biasMax
-	int weightMax = 1;//de même
+	double biasMax = 0d;//Entre - biasMax et + biasMax
+	double weightMax = 0.05d;//de même
 	//Neurone inr/decr
-	float incrPasNeurone = 0.5f;
+	double incrPasNeurone = 0.04d;
+	
+	
 	
 	//Dessin coucheNeuronale
 	int posXCoucheNeuronale = 10;
@@ -54,7 +61,14 @@ public interface Valeurs {
 	int posXGene = posXChrono;
 	int posYGene = posYChrono + 100;
 	
-	int longueurLevel = 30000;
+	//Dessin graph
+	int posXGraph = 70;
+	int posYGraph = posYGene + 220;
+	int posOrigineGraph = posYGraph + 300;
+	int largeurEntrePointAbscisse = 10;
+	int hauteurTraitGraduation = 5;
+	
+	int longueurLevel = 50000;
 	//Bloc
 	int hauteurBloc = 50;
 	int longueurBloc = 100;
@@ -64,13 +78,13 @@ public interface Valeurs {
 	*/
 	
 	//Gravité
-	float g = 6;//(float) 6;
+	float g = 10;//(float) 6;
 	//Tick lié à la gravité de saut
-	int compteurMax = 120;
+	int compteurMax = 260;
 	
 	//Déplacement perso
-	int vitesseX = 10;
-	int vitesseY = 1;
+	int vitesseX = 3;
+	int vitesseY = 5;
 	//Temps entre chaque déplacement perso
 	int tpsDeplacement = 1;
 	//Jump
@@ -83,7 +97,7 @@ public interface Valeurs {
 	
 	
 	//Affichage min gauche
-	int stopMvGauche = (longueurFenetre / 4);
+	int stopMvGauche = (longueurFenetre / 2);
 	
 	//Direction
 	enum Direction
@@ -105,5 +119,5 @@ public interface Valeurs {
 	
 	
 	String path = new File("").getAbsolutePath() + "\\src\\mario\\";
-	//String path = new File("").getAbsolutePath() + "\\";
+	String pathResult = path + "Resultats\\";
 }

@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 
 public class Personnage implements Valeurs,Comparator<Personnage>{
 	
+	public static int numero;
+	
 	public int posX;
 	public int posY;
 	
@@ -41,6 +43,8 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 	
 	public Personnage() {
 		
+		numero++;
+		
 		this.score = 0;
 		this.vie = true;
 		
@@ -68,10 +72,24 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 	}
 	
 	public Personnage(Bloc bloc,Map map) {
-				
+			
+		numero++;
+		
 		if(isPlusieurIa == true)
 		{
 			this.coucheNeuronale = new CoucheNeuronale();
+			if(ancienResult == true)
+			{
+				if(numero == 2) {
+				Lecture lecture = new Lecture("resultatfinal");
+				this.coucheNeuronale = lecture.traitement();
+				}
+				else
+				{
+					Lecture lecture = new Lecture("resultatfinal1");
+					this.coucheNeuronale = lecture.traitement();
+				}
+			}
 			this.chrono = new Chrono();
 		}
 		
