@@ -38,98 +38,110 @@ public class main implements Valeurs{
 		
 		while(fenetre.map.stopGame == false)
 		{
-			if(isIa == true)
+			/*
+			 * Met en pause l'exécution du code avec touche espace
+			 */
+			if(fenetre.gestionPause()==false)
 			{
-				gestionIA.startUneIA();
-			}
-			else if((isIa == false) && (isPlusieurIa == false))
-			{
-				fenetre.gestionDeplacementClavier(fenetre.map.perso);
-			}
-			else if(isPlusieurIa == true)
-			{
-				if(isFocusPlayer == false) {
-				//Plusieur IA
-				gestionIA.startPlusieursIA();
-				}
-				else
+				if(isIa == true)
 				{
+					gestionIA.startUneIA();
+				}
+				else if((isIa == false) && (isPlusieurIa == false))
+				{
+					fenetre.gestionDeplacementClavier(fenetre.map.perso);
+				}
+				else if(isPlusieurIa == true)
+				{
+					if(isFocusPlayer == false) {
+					//Plusieur IA
 					gestionIA.startPlusieursIA();
-					fenetre.gestionDeplacementClavier(fenetre.map.persoListe.get(0));
-				}
-				
-				
-				
-				
-				
-				//On gère le perso n°1
-				
-				//fenetre.gestionDeplacementClavier(fenetre.map.persoListe.get(0));
-				
-			}
-			
-			if(isPlusieurIa == false)
-			{
-				
-				if( (fenetre.map.perso.isJumping == true) && (fenetre.map.perso.compteur <= compteurMax))
-				{
-					fenetre.map.perso.compteur++;
-					fenetre.map.move( fenetre.map.perso.posX, (int)(fenetre.map.perso.posY - 2) );
-				}
-				else if(fenetre.map.perso.isJumping == false)
-				{
-					fenetre.map.perso.compteur = 0;
-				}
-				
-				if(fenetre.map.perso.vie == false)
-				{
-					fenetre.map.perso.resetPosInit(fenetre.map);
-				}
-				
-				fenetre.map.move( fenetre.map.perso.posX, (int)(fenetre.map.perso.posY + 1) ,fenetre.map.perso,Direction.DOWN);
-			}
-			else
-			{
-				int posX = 0;
-				int posY = 0;
-
-
-				for(Personnage perso : fenetre.map.persoListe)
-					
-					if(perso.vie == true)
-					{
-						posX = perso.posX;
-						posY = perso.posY;
-						
-						
-						if( (perso.isJumping == true) && (perso.compteur <= compteurMax))
-						{
-							perso.compteur++;
-							fenetre.map.move( posX, (posY - 2) ,perso);
-						}
-						else if(perso.isJumping == false)
-						{
-							perso.compteur = 0;
-						}
-						
-						posX = perso.posX;
-						posY = perso.posY;
-						
-						fenetre.map.move(posX, (posY + 1),perso, Direction.DOWN);
 					}
-										
+					else
+					{
+						gestionIA.startPlusieursIA();
+						fenetre.gestionDeplacementClavier(fenetre.map.persoListe.get(0));
+					}
+					
+					
+					
+					
+					
+					//On gère le perso n°1
+					
+					//fenetre.gestionDeplacementClavier(fenetre.map.persoListe.get(0));
+					
+				}
 				
+				if(isPlusieurIa == false)
+				{
+					
+					if( (fenetre.map.perso.isJumping == true) && (fenetre.map.perso.compteur <= compteurMax))
+					{
+						fenetre.map.perso.compteurSprint -= decrSpeedJump;
+						if(fenetre.map.perso.compteurSprint < (1*multiplicateur))
+						{
+							fenetre.map.perso.compteurSprint = 1*multiplicateur;
+						}
+						
+						fenetre.map.perso.compteur++;
+						fenetre.map.move( fenetre.map.perso.posX, (int)(fenetre.map.perso.posY - 2) );
+					}
+					else if(fenetre.map.perso.isJumping == false)
+					{
+						fenetre.map.perso.compteur = 0;
+					}
+					
+					if(fenetre.map.perso.vie == false)
+					{
+						fenetre.map.perso.resetPosInit(fenetre.map);
+					}
+					
+					fenetre.map.move( fenetre.map.perso.posX, (int)(fenetre.map.perso.posY + 1) ,fenetre.map.perso,Direction.DOWN);
+				}
+				else if(fenetre.map.stopGame == false && isPlusieurIa == true)
+				{
+					int posX = 0;
+					int posY = 0;
+	
+	
+					for(Personnage perso : fenetre.map.persoListe)
+						
+						if(perso.vie == true)
+						{
+							posX = perso.posX;
+							posY = perso.posY;
+							
+							
+							if( (perso.isJumping == true) && (perso.compteur <= compteurMax))
+							{
+								perso.compteur++;
+								fenetre.map.move( posX, (posY - 2) ,perso);
+							}
+							else if(perso.isJumping == false)
+							{
+								perso.compteur = 0;
+							}
+							
+							posX = perso.posX;
+							posY = perso.posY;
+							
+							fenetre.map.move(posX, (posY + 1),perso, Direction.DOWN);
+						}
+											
+					
+				}
+			
 			}
-			
-			
 			try {
-				Thread.sleep(1);
+				Thread.sleep(3);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			//fenetre.gestionDeplacementClavier();
 			fenetre.repaint();
+			
 		}
 		
 		

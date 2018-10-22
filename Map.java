@@ -116,8 +116,9 @@ public class Map implements Valeurs{
 	}
 	
 	//La synchro évite l'accès à plusieurs thread en même temps
-		public synchronized void move(int x, int y,Personnage perso,Direction direction)
+		public synchronized boolean move(int x, int y,Personnage perso,Direction direction)
 		{
+			boolean result = false;
 			if( (collision(x, y,perso,direction) == false) && (x >= 0) && (y >= 0) && (perso.vie == true))
 			{
 				perso.posX = x;
@@ -135,11 +136,17 @@ public class Map implements Valeurs{
 				{
 					this.posXRelativeFenetre = x;
 				}
+				
+				/*
+				 * Déplacement réussit
+				 */
+				result = true;
 			}
 			if( (y >= hauteurFenetre) && (perso.vie == true))
 			{
 				perso.vie = false;
 			}
+			return result;
 			
 		}
 	
@@ -278,7 +285,7 @@ public class Map implements Valeurs{
 		int posXOld = perso.posX;
 		int posYOld = perso.posY;
 		
-		perso.directionOld = direction;
+		//perso.directionOld = direction;
 		
 		for(Bloc bloc : listeBloc)
 		{

@@ -8,8 +8,8 @@ public class GestionIA implements Valeurs{
 	
 	private Fenetre_ fenetre;
 	
-	double entree[] = new double[4];
-	double sortie[] = new double[4];
+	double entree[] = new double[2];
+	double sortie[] = new double[2];
 	
 	int scoreOld;
 	int compteurScoreOld;
@@ -83,6 +83,8 @@ public class GestionIA implements Valeurs{
 						
 						
 						fenetre.map.stopGame = true;
+						
+						return;
 					}
 					
 					
@@ -155,6 +157,18 @@ public class GestionIA implements Valeurs{
 				
 			}
 			int index = 0;
+			int score = 0;
+			for(int i = 0; i < fenetre.map.persoListe.size(); i++)
+			{
+				if( (score < fenetre.map.persoListe.get(i).score) && (fenetre.map.persoListe.get(i).vie == true) )
+				{
+					score = fenetre.map.persoListe.get(i).score;
+					index = i;
+				}
+			}
+			fenetre.map.persoListe.get(index).coucheNeuronale.sortMaxMinWeight(fenetre.map.persoListe.get(index).coucheNeuronale.neuroneArray);
+			fenetre.coucheNeuronale = (CoucheNeuronale) fenetre.map.persoListe.get(index).coucheNeuronale;
+			/*
 			perso = fenetre.map.persoListe.get(index++);
 			while( (perso.vie != true) && (index < nbrIA))
 			{
@@ -162,8 +176,14 @@ public class GestionIA implements Valeurs{
 			}
 			if(index < nbrIA)
 			{
+				if(index > 0)
+				{
+					index -= 1;
+				}
+				fenetre.map.persoListe.get(index).coucheNeuronale.sortMaxMinWeight(fenetre.map.persoListe.get(index).coucheNeuronale.neuroneArray);
 				fenetre.coucheNeuronale = (CoucheNeuronale) fenetre.map.persoListe.get(index).coucheNeuronale;
-			}
+			}*/
+			
 		}
 		else
 		{
@@ -244,7 +264,8 @@ public class GestionIA implements Valeurs{
 				{
 					//Score stagne
 					compteurScoreOld++;
-					if(compteurScoreOld >= 8)
+					System.out.println("" + compteurScoreOld + "/" + nbrEssaiAVReset);
+					if(compteurScoreOld >= nbrEssaiAVReset)
 					{
 						System.out.println("RESET DES IA");
 					
@@ -355,7 +376,7 @@ public class GestionIA implements Valeurs{
 			else
 			{
 				//Le score stagne ou diminue
-				if( ((perso.chrono.getTime() - perso.timeOutSec) >= 2000))
+				if( ((perso.chrono.getTime() - perso.timeOutSec) >= TimeToDieAFK))
 				{
 					perso.vie = false;
 				}
@@ -428,7 +449,7 @@ public class GestionIA implements Valeurs{
 			else
 			{
 				//Le score stagne ou diminue
-				if( ((fenetre.chrono.getTime() - timeOutSec) >= 2000) || (fenetre.map.perso.vie == false))
+				if( ((fenetre.chrono.getTime() - timeOutSec) >= TimeToDieAFK) || (fenetre.map.perso.vie == false))
 				{
 					//On stocke le score dans la classe coucheNeuronale
 					coucheNeuronale.score = fenetre.map.perso.score;
@@ -495,9 +516,9 @@ public class GestionIA implements Valeurs{
 		//System.out.println("PosIA : " + (fenetre.map.perso.posX + fenetre.map.perso.longueurPerso) + " PosBloc : " + bloc_tempo.posX);
 		entree[0] = (double) (bloc_tempo.posX - (fenetre.map.perso.posX + fenetre.map.perso.longueurPerso) );
 		entree[1] = (double) (bloc_tempo.posY - (fenetre.map.perso.posY + fenetre.map.perso.hauteurPerso) );
-		
+		/*
 		entree[2] = entree[0] + bloc_tempo.longueur;
-		entree[3] = entree[1] + bloc_tempo.hauteur;
+		entree[3] = entree[1] + bloc_tempo.hauteur;*/
 		
 		/*
 		 * NEW
@@ -509,10 +530,10 @@ public class GestionIA implements Valeurs{
 		
 		//Vecteur d'entrée
 		entree[0] = (double) (bloc_tempo.posX - (posX) );
-		entree[1] = (double) (bloc_tempo.posY - (posY + perso.hauteurPerso) );
+		entree[1] = (double) (bloc_tempo.posY - (posY + perso.hauteurPerso) );/*
 		entree[2] = (double) entree[0] + bloc_tempo.longueur;
 		entree[3] = (double) entree[1] + bloc_tempo.hauteur;
-		/*
+		
 		entree[4] = (double) (fenetre.map.listeBloc.get(index).posX - (posX) );
 		entree[5] = (double) (fenetre.map.listeBloc.get(index).posY - (posY + perso.hauteurPerso) );
 		entree[6] = (double) entree[0] + fenetre.map.listeBloc.get(index).longueur;
@@ -533,6 +554,8 @@ public class GestionIA implements Valeurs{
 		//entree[3] = (double) bloc_tempo.posY;
 		
 		sortie = coucheNeuronale.calculSortie(entree);
+		
+		coucheNeuronale.sortMaxMinWeight(coucheNeuronale.neuroneArray);
 		
 		fenetre.coucheNeuronale = coucheNeuronale;
 		

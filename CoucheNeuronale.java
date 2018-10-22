@@ -47,15 +47,61 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	private static int numeroNeurone;
 	private static int numeroWeight;
 	private static boolean isIncr;
+	private static boolean isIncrbias;
+	private static boolean isChgmntBias=true;
 	
 	private static double oldValue;
 	
-	
+	public double[] maxMin = new double[2];;
 	public int score;
 	
 	public double[] entree;
 	
 	public Neurone[][] neuroneArray;
+	
+	
+	void sortMaxMinWeight(Neurone[][] neuroneArray)
+	{
+		//double[] maxMin = new double[2];
+		
+		/*
+		 * Init des valeurs extremes
+		 * indice 0 : max
+		 * indice 1 : min
+		 */
+		maxMin[0] = -10000.0;
+		maxMin[1] = 10000.0;
+		
+		for(int i = 0; i < 2; i++)
+		{
+			for(int x = 0; x < NBR_COUCHE; x++)
+			{
+				for(int y = 0; y < NBR_ENTREE_PAR_NEURONE; y++)
+				{
+					for(int z = 0; z < NBR_ENTREE_PAR_NEURONE; z++)
+					{
+						if(i == 0)
+						{
+							if(maxMin[0] < neuroneArray[x][y].weight[z])
+							{
+								maxMin[0] = neuroneArray[x][y].weight[z];
+							}
+						}
+						else
+						{
+							if(maxMin[1] > neuroneArray[x][y].weight[z])
+							{
+								maxMin[1] = neuroneArray[x][y].weight[z];
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		//return maxMin;
+	}
 	
 	public CoucheNeuronale() {
 		this.neuroneArray = new Neurone[NBR_COUCHE][NBR_NEURONE_PAR_COUCHE];
@@ -143,52 +189,103 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		 */
 		//On mémorise pour raccourcir les tests
 		//double valueWeight = this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight];
-		if(isIncr == true)
+		
+		
+		if(isChgmntBias == true)
 		{
-			//if(valueWeight != 0)//Paramètre pas utile pour le moment (à muter)
-			//{
-				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (multiplicateur * incrPasNeurone); 
-			/*}
-			else
-			{
-				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone * 2);
-			}*/
-			isIncr = false;
 			/*
-			 * Gestion du saut de neurone/couche/poids
+			 * Chgmt bias + et -
 			 */
-			numeroWeight++;
-			if(numeroWeight >= 4)
+			if(isIncrbias == true)
 			{
-				numeroWeight = 0;
-				numeroNeurone++;
-				if(numeroNeurone >= NBR_NEURONE_PAR_COUCHE)
-				{
-					numeroNeurone = 0;
-					numeroCouche++;
-					if(numeroCouche >= NBR_COUCHE)
-					{
-						numeroCouche = 0;
-						System.out.println("*** Toutes les valeurs ont déjà été modifiées !! ****");
-					}
-				}
-			}
-		}
-		else
-		{
-			//if(valueWeight != 0)
-			//{
-				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (multiplicateur * incrPasNeurone);
-			/*}
-			else if(valueWeight < 0)
-			{
-				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (incrPasNeurone * 2);
+				/*
+				 * GESTION DU BIAS
+				 */
+				
+				this.neuroneArray[numeroCouche][numeroNeurone].bias[numeroWeight] += (multiplicateur * incrPasNeuronebias); 
+				isIncrbias = false;
+				
+				isChgmntBias = false; //-> PERMET DE PASSER AU CHGMT DE MODIF
 			}
 			else
 			{
-				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone * 2);
-			}*/
-			isIncr = true;
+				/*
+				 * GESTION DU BIAS
+				 */
+				
+				this.neuroneArray[numeroCouche][numeroNeurone].bias[numeroWeight] -= (multiplicateur * incrPasNeuronebias); 
+				
+				isIncrbias = true;
+			}
+			
+		}
+		else//->ON modifie le poids de la neurone
+		{
+		
+			if(isIncr == true)
+			{
+				//if(valueWeight != 0)//Paramètre pas utile pour le moment (à muter)
+				//{
+					this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (multiplicateur * incrPasNeurone); 
+					
+					
+						
+					/*
+					 * Gestion du saut de neurone/couche/poids
+					 */
+					
+					numeroWeight++;
+					if(numeroWeight >= NBR_ENTREE_PAR_NEURONE)
+					{
+						numeroWeight = 0;
+						numeroNeurone++;
+						if(numeroNeurone >= NBR_NEURONE_PAR_COUCHE)
+						{
+							numeroNeurone = 0;
+							numeroCouche++;
+							if(numeroCouche >= NBR_COUCHE)
+							{
+								numeroCouche = 0;
+								System.out.println("*** Toutes les valeurs ont déjà été modifiées !! ****");
+							}
+						}
+					}
+					
+					isIncr = false;
+					isChgmntBias = true; //-> PERMET DE PASSER AU CHGMT DE BIAS
+				
+					
+				/*}
+				else
+				{
+					this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone * 2);
+				}*/
+				
+			}
+			else
+			{
+				
+				this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (multiplicateur * incrPasNeurone);
+				isIncr = true;
+				
+				//if(valueWeight != 0)
+				//{
+				
+						
+				
+				
+				
+					/*}
+				else if(valueWeight < 0)
+				{
+					this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] -= (incrPasNeurone * 2);
+				}
+				else
+				{
+					this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight] += (incrPasNeurone * 2);
+				}*/
+				
+			}
 		}
 		
 		

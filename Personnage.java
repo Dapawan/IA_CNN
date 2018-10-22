@@ -35,6 +35,7 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 	
 	public int compteurImg = 0;
 	public int compteur = 0;
+	public int compteurSprint = 0;
 	
 	public Gravite gravite;
 	
@@ -78,17 +79,26 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 		if(isPlusieurIa == true)
 		{
 			this.coucheNeuronale = new CoucheNeuronale();
-			if(ancienResult == true)
+			if(ancienResult == true && isFocusPlayer == true)
 			{
-				if(numero == 2) {
+				if(numero == 2 && isFocusPlayer == true) {
 				Lecture lecture = new Lecture("resultatfinal");
 				this.coucheNeuronale = lecture.traitement();
 				}
-				else
+				else if(numero == 3 && isFocusPlayer == true)
 				{
 					Lecture lecture = new Lecture("resultatfinal1");
 					this.coucheNeuronale = lecture.traitement();
 				}
+			}
+			else if(ancienResult == true && numero <= nbrIA)
+			{
+				Lecture lecture = new Lecture("resultatfinal");
+				this.coucheNeuronale = lecture.traitement();
+			}
+			else
+			{
+				this.coucheNeuronale = new CoucheNeuronale();
 			}
 			this.chrono = new Chrono();
 		}

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.w3c.dom.css.RGBColor;
+
 import neurone.Poisson;
 import neurone.Fenetre.Panel;
 
@@ -24,6 +26,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 	public double[] sortie;
 	public int compteurImg;
 	public Graph graph;
+	public boolean isSpacePressed = false;
 	
 	public Chrono chrono;
 	
@@ -95,6 +98,21 @@ public class Fenetre_ extends JFrame implements Valeurs{
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				// TODO Auto-generated method stub
+				/*
+				 * Gestion de la touche espace
+				 */
+				if(arg0.getKeyCode() == KeyEvent.VK_SPACE)
+				{
+					if(isSpacePressed == true)
+					{
+						isSpacePressed = false;
+					}
+					else
+					{
+						isSpacePressed = true;
+					}
+				}
+				
 				
 				//Lancement du chrono au premier mov
 				if(chrono == null)
@@ -142,13 +160,18 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		{
 			if(sortie[i] >= seuilDecision)
 			{
+				posX = perso.posX;
+				posY = perso.posY;
+				
 				switch(i)
 				{
 				case 0://Bas
+					
 					perso.direction = Direction.DOWN;
 					//Arrête le jump
 					perso.isJumping = false;
 					map.move(posX, (posY + vitesseY) ,perso,Direction.DOWN);
+					
 					break;
 					
 				case 1://Gauche
@@ -167,11 +190,11 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						if(map.collision(posX, posY+1, perso,Direction.DOWN) == true)
 						{
 							perso.isJumping = true;
+							perso.compteur = 0;
 							perso.direction = Direction.UP;
 						}
 					}
 					break;
-				
 				}
 			}
 		}
@@ -272,6 +295,15 @@ public class Fenetre_ extends JFrame implements Valeurs{
 		}
 	}
 	
+	public synchronized boolean gestionPause()
+	{
+		if(isSpacePressed == true)
+		{
+			return true;
+		}
+		return false;
+	}
+			
 	
 	public synchronized void gestionDeplacementClavier(Personnage perso)
 	{
@@ -287,14 +319,66 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				
 				if(touche == KeyEvent.VK_LEFT)
 				{
+					/*
+					 * Incrémentation du speed
+					 */
+					if(map.collision(posX, posY+1, perso,Direction.DOWN) == true)
+					{
+						perso.compteurSprint += incrSpeedSol;
+					}
+					
+					if(perso.compteurSprint > (speedXMAx*multiplicateur))
+					{
+						perso.compteurSprint = speedXMAx*multiplicateur;
+					}
+					
+					if(perso.directionOld == Direction.RIGHT)
+					{
+						/*
+						 * Reset speed
+						 */
+						perso.compteurSprint = (1*multiplicateur);
+						System.out.println("Changement dir");
+					}
+					
 					perso.direction = Direction.LEFT;
-					map.move( (posX - vitesseX), posY,perso,perso.direction);
+					perso.directionOld = perso.direction;
+					
+					int depl = (perso.compteurSprint/multiplicateur);
+					System.out.println("" + depl);
+					map.move( (posX - depl), posY,perso,perso.direction);
 				}
 				if(touche == KeyEvent.VK_RIGHT)
 				{
+					/*
+					 * Incrémentation du speed
+					 */
+					if(map.collision(posX, posY+1, perso,Direction.DOWN) == true)
+					{
+						perso.compteurSprint += incrSpeedSol;
+					}
+					
+					if(perso.compteurSprint > (speedXMAx*multiplicateur))
+					{
+						perso.compteurSprint = speedXMAx*multiplicateur;
+					}
+					
+					if(perso.directionOld == Direction.LEFT)
+					{
+						/*
+						 * Reset speed
+						 */
+						perso.compteurSprint = (1*multiplicateur);
+						System.out.println("Changement dir");
+					}
+					
 					perso.direction = Direction.RIGHT;
+					perso.directionOld = perso.direction;
+					
+					int depl = (perso.compteurSprint/100);
+					System.out.println("" + depl);
 					//System.out.println("Depl droite");
-					map.move( (posX + vitesseX), posY,perso,perso.direction);
+					map.move( (posX + depl), posY,perso,perso.direction);
 				}
 				//Jump
 				if( (touche == KeyEvent.VK_UP) && (perso.isJumping == false))
@@ -312,8 +396,6 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					map.move(posX, (posY + vitesseY) ,perso,perso.direction);
 				}
 				
-			
-				perso.directionOld = perso.direction;
 
 			}
 		}
@@ -430,19 +512,19 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					{
 						if(direction == Direction.RIGHT)
 						{
-							if(compteurImg >= 90)
+							if(map.persoListe.get(0).compteurImg >= 90)
 							{
-								compteurImg = 10;
+								map.persoListe.get(0).compteurImg = 10;
 							}
-							g.drawImage(map.perso.img[1][(compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
+							g.drawImage(map.perso.img[1][(map.persoListe.get(0).compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
 						}
 						else if(direction == Direction.LEFT)
 						{
-							if(compteurImg >= 90)
+							if(map.persoListe.get(0).compteurImg >= 90)
 							{
-								compteurImg = 10;
+								map.persoListe.get(0).compteurImg = 10;
 							}
-							g.drawImage(map.perso.img[0][(compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
+							g.drawImage(map.perso.img[0][(map.persoListe.get(0).compteurImg++/10)],map.posXRelativeFenetre, map.perso.posY, null);
 						}
 						else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
 						{
@@ -500,15 +582,15 @@ public class Fenetre_ extends JFrame implements Valeurs{
 									{
 										perso.compteurImg = 10;
 									}
-									g.drawImage(perso.img[1][(compteurImg/10)],posX, perso.posY, null);
+									g.drawImage(perso.img[1][(perso.compteurImg/10)],posX, perso.posY, null);
 								}
 								else if(perso.direction == Direction.LEFT)
 								{
-									if(++compteurImg >= 90)
+									if(++perso.compteurImg >= 90)
 									{
-										compteurImg = 10;
+										perso.compteurImg = 10;
 									}
-									g.drawImage(perso.img[0][(compteurImg/10)],posX, perso.posY, null);
+									g.drawImage(perso.img[0][(perso.compteurImg/10)],posX, perso.posY, null);
 								}
 								else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
 								{
@@ -554,6 +636,13 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				int oldPosX = 0;
 				int oldPosY = 0;
 				
+				/*
+				 * Affichage coloris
+				 * VERT Foncé --> Valeur positive max
+				 * ROUGE Foncé --> Valeur négative max
+				 */
+				g.drawString("Valeur MAX + : " + String.format("%.4f", (float)coucheNeuronale.maxMin[0]) + "  MAX - : " + String.format("%.4f", (float)coucheNeuronale.maxMin[1]), posX , posY - 50);
+				
 				//Les entrées sont avant
 				g.setColor(Color.BLUE);
 				for(int i = 0; i < coucheNeuronale.NBR_ENTREE_PAR_NEURONE; i++)
@@ -593,16 +682,16 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						{
 							if(coucheNeuronale.neuroneArray[i][a].weight[x] > 0)
 							{
-								g.setColor(liaisonPositive);
+								g.setColor(new Color(0, (int)(255 * (coucheNeuronale.neuroneArray[i][a].weight[x] / coucheNeuronale.maxMin[0])) , 0) );
 							}
 							else 
 							{
-								g.setColor(liaisonNegative);
+								g.setColor(new Color((int)(255 * (coucheNeuronale.neuroneArray[i][a].weight[x] / coucheNeuronale.maxMin[1])), 0 , 0));
 							}
 							if(coucheNeuronale.neuroneArray[i][a].weight[x] != 0)
 							{
 								g.drawLine( (posX - longueurLiaisons), posY + (grandeurNeurone / 2), posX , oldPosY + (grandeurNeurone / 2));
-								g.drawString(String.format("%.2f", (float)coucheNeuronale.neuroneArray[i][a].weight[x]), posX - (longueurLiaisons / 2),  posY + (grandeurNeurone / 2) - 5);
+								g.drawString(String.format("%.4f + %.4f", (float)coucheNeuronale.neuroneArray[i][a].weight[x],(float)coucheNeuronale.neuroneArray[i][a].bias[x]), (posX - longueurLiaisons) + (longueurLiaisons / (a+2)) - 50,  posY + (((a+1-i)*grandeurNeurone) / 2) - 50);
 							}
 							posY += grandeurNeurone;
 						}

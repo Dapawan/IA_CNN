@@ -12,31 +12,36 @@ public interface Valeurs {
 	int longueurFenetre = 1000;
 	
 	//Focus perso player
-	boolean isFocusPlayer = true;
+	boolean isFocusPlayer = false;
+	
+	//Time IA to die when AFK
+	int TimeToDieAFK = 100;//En ms
 	
 	//Lancement IA
 	boolean isIa = false;
 	//Reprise ancien resultat
 	boolean ancienResult = true;
 	
-	boolean isPlusieurIa = true;
+	int nbrEssaiAVReset = 30;
+	boolean isPlusieurIa = false;
 	int nbrIA = 3;//32;
 	int nbrResultatStocke = 2;
 	
 	//Neurone
-	double biasMax = 0d;//Entre - biasMax et + biasMax
-	double weightMax = 0.05d;//de même
+	double biasMax = 0.02d;//Entre - biasMax et + biasMax
+	double weightMax = 0.02d;//de même
 	//Neurone inr/decr
-	double incrPasNeurone = 0.04d;
+	double incrPasNeurone = 0.005d;
+	double incrPasNeuronebias = 0.005d;
 	
 	
 	
 	//Dessin coucheNeuronale
 	int posXCoucheNeuronale = 10;
-	int posYCoucheNeuronale = 200;
+	int posYCoucheNeuronale = 100;
 	
 	int grandeurNeurone = 50;
-	int longueurLiaisons = 200;
+	int longueurLiaisons = 500;
 	
 	Color liaisonPositive = Color.GREEN;
 	Color liaisonNegative = Color.RED;
@@ -45,7 +50,7 @@ public interface Valeurs {
 	Color resultatInfSeuil = Color.BLUE;
 	
 	//Seuil de décision
-	float seuilDecision = 0.75f;
+	double seuilDecision = 0.75d;
 	
 	
 	//Affichage temps
@@ -68,7 +73,7 @@ public interface Valeurs {
 	int largeurEntrePointAbscisse = 10;
 	int hauteurTraitGraduation = 5;
 	
-	int longueurLevel = 50000;
+	int longueurLevel = 10000;
 	//Bloc
 	int hauteurBloc = 50;
 	int longueurBloc = 100;
@@ -79,14 +84,19 @@ public interface Valeurs {
 	
 	//Gravité
 	float g = 10;//(float) 6;
-	//Tick lié à la gravité de saut
-	int compteurMax = 260;
+	
 	
 	//Déplacement perso
-	int vitesseX = 3;
+	int vitesseX = 1;
 	int vitesseY = 5;
+	int speedXMAx = 9;
+	int multiplicateur = 100;
+	int decrSpeedJump = 6;
+	int incrSpeedSol = 5;
+	//Tick lié à la gravité de saut
+	int compteurMax = 100/vitesseX;
 	//Temps entre chaque déplacement perso
-	int tpsDeplacement = 1;
+	int tpsDeplacement = 5;
 	//Jump
 	int jumpY = 200;
 	
