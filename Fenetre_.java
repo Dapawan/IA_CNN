@@ -175,13 +175,58 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					break;
 					
 				case 1://Gauche
+					/*
+					 * Incrémentation du speed
+					 */
+					if(map.collision(posX, posY+1, perso,Direction.DOWN) == true)
+					{
+						perso.compteurSprint += incrSpeedSol;
+					}
+					
+					if(perso.compteurSprint > (speedXMAx*multiplicateur))
+					{
+						perso.compteurSprint = speedXMAx*multiplicateur;
+					}
+					
+					if(perso.directionOld == Direction.RIGHT)
+					{
+						/*
+						 * Reset speed
+						 */
+						perso.compteurSprint = (vitesseX*multiplicateur);
+					}
+					
 					perso.direction = Direction.LEFT;
-					map.move( (posX - vitesseX), posY,perso,Direction.LEFT);
+					perso.directionOld = perso.direction;
+					map.move( (posX - (perso.compteurSprint/multiplicateur)), posY,perso,Direction.LEFT);
 					break;
 					
 				case 2://Droite
+					
+					/*
+					 * Incrémentation du speed
+					 */
+					if(map.collision(posX, posY+1, perso,Direction.DOWN) == true)
+					{
+						perso.compteurSprint += incrSpeedSol;
+					}
+					
+					if(perso.compteurSprint > (speedXMAx*multiplicateur))
+					{
+						perso.compteurSprint = speedXMAx*multiplicateur;
+					}
+					
+					if(perso.directionOld == Direction.LEFT)
+					{
+						/*
+						 * Reset speed
+						 */
+						perso.compteurSprint = (vitesseX*multiplicateur);
+					}
+					
 					perso.direction = Direction.RIGHT;
-					map.move( (posX + vitesseX), posY,perso,Direction.RIGHT);
+					perso.directionOld = perso.direction;
+					map.move( (posX + (perso.compteurSprint/multiplicateur)), posY,perso,Direction.RIGHT);
 					break;
 					
 				case 3://Saut
@@ -198,7 +243,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 				}
 			}
 		}
-		perso.directionOld = perso.direction;
+		
 	}
 	
 	public void gestionDeplacementIA(double[] sortie)
@@ -691,7 +736,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 							if(coucheNeuronale.neuroneArray[i][a].weight[x] != 0)
 							{
 								g.drawLine( (posX - longueurLiaisons), posY + (grandeurNeurone / 2), posX , oldPosY + (grandeurNeurone / 2));
-								g.drawString(String.format("%.4f + %.4f", (float)coucheNeuronale.neuroneArray[i][a].weight[x],(float)coucheNeuronale.neuroneArray[i][a].bias[x]), (posX - longueurLiaisons) + (longueurLiaisons / (a+2)) - 50,  posY + (((a+1-i)*grandeurNeurone) / 2) - 50);
+								//g.drawString(String.format("%.4f + %.4f", (float)coucheNeuronale.neuroneArray[i][a].weight[x],(float)coucheNeuronale.neuroneArray[i][a].bias[x]), (posX - longueurLiaisons) + (longueurLiaisons / (a+2)) - 50,  posY + (((a+1-i)*grandeurNeurone) / 2) - 50);
 							}
 							posY += grandeurNeurone;
 						}

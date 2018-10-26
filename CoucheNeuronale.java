@@ -33,8 +33,8 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	 */
 	
 	public final int NBR_COUCHE = 1;
-	public final int NBR_NEURONE_PAR_COUCHE = 4;
-	public final int NBR_ENTREE_PAR_NEURONE = 4;
+	public final int NBR_NEURONE_PAR_COUCHE = 5;
+	public final int NBR_ENTREE_PAR_NEURONE = 5;
 	
 	private static int numeroMutation;
 	private static boolean incrMutation;

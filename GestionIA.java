@@ -23,8 +23,8 @@ public class GestionIA implements Valeurs{
 	 * Test 2 IA
 	 */
 	
-	double plusieurIAentree[][] = new double[nbrIA][4];
-	double plusieurIAsortie[][] = new double[nbrIA][4];
+	double plusieurIAentree[][] = new double[nbrIA][5];
+	double plusieurIAsortie[][] = new double[nbrIA][5];
 	
 	
 	
@@ -109,6 +109,7 @@ public class GestionIA implements Valeurs{
 					plusieurIAentree[i][1] = (double) (bloc_tempo.posY - (posY + perso.hauteurPerso) );
 					plusieurIAentree[i][2] = (double) plusieurIAentree[i][0] + bloc_tempo.longueur;
 					plusieurIAentree[i][3] = (double) plusieurIAentree[i][1] + bloc_tempo.hauteur;
+					plusieurIAentree[i][4] = (double) perso.compteurSprint;
 					
 					/*plusieurIAentree[i][4] = (double) (fenetre.map.listeBloc.get(index).posX - (posX) );
 					plusieurIAentree[i][5] = (double) (fenetre.map.listeBloc.get(index).posY - (posY + perso.hauteurPerso) );
