@@ -1,71 +1,31 @@
-package mario;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
+package Chess;
 
 public interface Valeurs {
 
-	int hauteurFenetre = 1080;
-	int longueurFenetre = 1000;
+	int longueurFenetre = 900;
+	int hauteurFenetre = 900;
 	
-	//Neurone
-	int biasMax = 50;//Entre - biasMax et + biasMax
-	int weightMax = 50;//de même
-	
-	
-	//Affichage temps
-	int posXChrono = 0;
-	int posYChrono = 100;
-	//Affichage score
-	int posXScore = posXChrono + 100;
-	int posYScore = posYChrono;
-	
-	int longueurLevel = 100000;
-	//Bloc
-	int hauteurBloc = 50;
-	int longueurBloc = 100;
-	
-	int hauteurPerso = 50;
-	int longueurPerso = 50;
-	
-	//Gravité
-	float g = (float) 6;
-	//Tick lié à la gravité de saut
-	int compteurMax = 80;
-	
-	//Déplacement perso
-	int vitesseX = 1;
-	int vitesseY = 1;
-	//Temps entre chaque déplacement perso
-	int tpsDeplacement = 1;
-	//Jump
-	int jumpY = 200;
-	
-	//Palier création level up
-	int palierUp = 10;
-	int limitePalierUp = hauteurFenetre - 100;
-	int limitePalierDown = hauteurFenetre;
+	/*
+	 * Neurone
+	 */
+	double biasMax = 0.05d;
+	double weightMax = 0.05d;
+	/*
+	 * Reseau neuronale
+	 */
+	char nbrEntree = 2;
+	char[] nbrNeuroneParCouche = {2,1};
 	
 	
-	//Affichage min gauche
-	int stopMvGauche = (longueurFenetre / 4);
 	
-	//Direction
-	enum Direction
-	{
-		INIT,
-		RIGHT,
-		LEFT,
-		UP,
-		DOWN
-	}
+	/*
+	 * Caractéristiques grille
+	 */
+	int nbrColonne = 4;
+	int nbrLigne = 4;
 	
-	//String img
-	String imgStr[] = { "depl_gauche_", "depl_droite_"};
+	int debutPosColonne = 30;//x
+	int debutPosLigne = 30;//y
 	
-	//Background img
-	String backgroundStr = "C:\\\\Users\\\\Dapawan\\\\eclipse-workspace\\\\IA\\\\src\\\\mario\\\\images\\\\background_1.png";
 	
 }

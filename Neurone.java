@@ -1,48 +1,42 @@
-package mario;
+package Chess;
 
 public class Neurone implements Valeurs{
-	
-	public Double[] bias;
-	public Double[] weight;
-	
-	public int nbrEntree;
-	public static int numero;
-	
+
+	public double[] bias;
+	public double[] weight;
 	public double result;
 	
-	public Neurone(int nbrEntree) {
-		
-		this.numero++;
-		//System.out.println("Création de la neurone n° " + this.numero);
-		this.result = 0.0;
-		
+	public int nbrEntree;
+	
+	public Neurone(int nbrEntree) 
+	{
 		this.nbrEntree = nbrEntree;
 		//On prépare les valeurs pour chaque liaisons
-		bias = new Double[nbrEntree];
-		weight = new Double[nbrEntree];
-		//Init des valeurs
+		bias = new double[nbrEntree];
+		weight = new double[nbrEntree];
 		
-		for(int i = 0; i < nbrEntree; i++) {
-			this.bias[i] = (Math.random() - 0.5) * (biasMax * 2);
-			this.weight[i] = (Math.random() - 0.5) * (weightMax * 2);
+		//On init les valeurs des paramètres
+		for(int i = 0; i < nbrEntree; i++) 
+		{
+			this.bias[i] = (Math.random() - 0.5) * ( (biasMax) * 2);
+			this.weight[i] = (Math.random() - 0.5) * ( (weightMax) * 2);
 		}
-		
-		
 	}
-	
-	public double calculResult(Double[] entree2)
+
+	public double calculResult(double[] entree)
 	{
 		double result = 0.0;
 		
-		for(int i = 0; i < entree2.length; i++)
+		for(int i = 0; i < entree.length; i++)
 		{
-			//result += sig(weight * entree + bias)
-			result += sigmoideFunction( (this.weight[i] * entree2[i]) + this.bias[i]);
+			//result += (weight * entree + bias)
+			//sigm du result
+			result += (this.weight[i] * entree[i]) + this.bias[i];
 		}
 		
 		
 		//On save le réultat
-		this.result = result;
+		this.result = sigmoideFunction(result);
 		
 		return result;
 	}
@@ -59,5 +53,5 @@ public class Neurone implements Valeurs{
 		return result;
 		
 	}
-
+	
 }
