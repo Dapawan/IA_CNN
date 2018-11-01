@@ -1,5 +1,7 @@
 package Chess;
 
+import java.util.ArrayList;
+
 public interface Valeurs {
 
 	int longueurFenetre = 900;
@@ -16,8 +18,11 @@ public interface Valeurs {
 	char nbrEntree = 2;
 	char[] nbrNeuroneParCouche = {2,1};
 	
-	
-	
+	/*
+	 * Types de pieces
+	 */
+	enum TypeDePiece{PION,TOUR,FOU,CAVALIER};
+	enum Equipe{BLEU,ROUGE};	
 	/*
 	 * Caractéristiques grille
 	 */
@@ -27,5 +32,20 @@ public interface Valeurs {
 	int debutPosColonne = 30;//x
 	int debutPosLigne = 30;//y
 	
+	/*
+	 * Play
+	 * J1 : Bleu
+	 * J2 : Rouge
+	 */
+	
+	TypeDePiece PieceJ1[] = {TypeDePiece.PION};//,TypeDePiece.PION,TypeDePiece.PION};
+	TypeDePiece PieceJ2[] = {TypeDePiece.PION};//,TypeDePiece.PION,TypeDePiece.PION};
+	
+	Equipe tourDeJeu = Equipe.BLEU;
+	int indicePieceSelectJ1 = 0;
+	int indicePieceSelectJ2 = -1;
+	
+	ArrayList<Piece> pieceJ1 = new ArrayList<>();
+	ArrayList<Piece> pieceJ2 = new ArrayList<>();
 	
 }

@@ -11,8 +11,8 @@ public class Grille implements Valeurs{
 	
 	private Fenetre fenetre;
 	
-	private int espaceColonne;
-	private int espaceLigne;
+	public int espaceColonne;
+	public int espaceLigne;
 	
 	
 	public Grille(Fenetre fenetre) {

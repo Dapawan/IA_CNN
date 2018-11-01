@@ -3,11 +3,12 @@ package Chess;
 public class main {
 	
 	private static Fenetre fenetre;
+	private static Partie partie;
 
 	public static void main(String[] args) throws InterruptedException {
 
 		fenetre = new Fenetre();
-		
+		partie = new Partie();
 		
 		ReseauNeuronale reseau = new ReseauNeuronale();
 		
