@@ -2,6 +2,8 @@ package Chess;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -9,11 +11,18 @@ import javax.swing.JPanel;
 public class Fenetre extends JFrame implements Valeurs{
 
 	private Panel panel;
-	private Grille grille;
+	public Grille grille;
+	private Partie partie;
+	
+	public int indicePieceSelectJ1 = 0;
+	public int indicePieceSelectJ2 = 0;
 	
 	
-	public Fenetre() {
+	
+	public Fenetre(Partie partie) {
 		
+		this.partie = partie;
+		partie.fenetre = this;
 		this.grille = new Grille(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,8 +37,9 @@ public class Fenetre extends JFrame implements Valeurs{
 		
 		this.add(panel);
 		
+		panel.addMouseListener(partie);
 	}
-	
+		
 	
 	public class Panel extends JPanel{
 		
@@ -69,44 +79,44 @@ public class Fenetre extends JFrame implements Valeurs{
 		
 		public void dessinDeplacementJ(Graphics g)
 		{
-			if( (tourDeJeu == Equipe.BLEU) && (pieceJ1.size() >= 1) )
+			if( (partie.tourDeJeu == Equipe.BLEU) && (pieceJ1.size() >= 1) )
 			{
 				g.setColor(Color.BLUE);
 				/*
 				 * Dessin des déplacements possibles
 				 */
-				for(int newColonneX = 1; newColonneX < nbrColonne; newColonneX++)
+				for(int newColonneX = 1; newColonneX <= nbrColonne; newColonneX++)
 				{
-					for(int newLigneY = 1; newLigneY < nbrLigne; newLigneY++)
+					for(int newLigneY = 1; newLigneY <= nbrLigne; newLigneY++)
 					{
 						if(pieceJ1.get(indicePieceSelectJ1).regleMove(newColonneX, newLigneY) == true)
 						{
 							/*
 							 * Deplacement possible
 							 */
-							g.drawOval( (newColonneX * grille.espaceColonne) + (grille.espaceColonne / 2), (newLigneY * grille.espaceLigne) + (grille.espaceLigne / 2), (grille.espaceColonne / 2), (grille.espaceLigne / 2) );
+							g.drawOval( ((newColonneX - 1) * grille.espaceColonne) + (grille.espaceColonne / 2), ((newLigneY - 1) * grille.espaceLigne) + (grille.espaceLigne / 2), (grille.espaceColonne / 2), (grille.espaceLigne / 2) );
 						}
 					}
 				}
 				
 				
 			}
-			else if( (tourDeJeu == Equipe.ROUGE) && (pieceJ2.size() >= 1) )
+			else if( (partie.tourDeJeu == Equipe.ROUGE) && (pieceJ2.size() >= 1) )
 			{
 				g.setColor(Color.RED);
 				/*
 				 * Dessin des déplacements possibles
 				 */
-				for(int newColonneX = 1; newColonneX < nbrColonne; newColonneX++)
+				for(int newColonneX = 1; newColonneX <= nbrColonne; newColonneX++)
 				{
-					for(int newLigneY = 1; newLigneY < nbrLigne; newLigneY++)
+					for(int newLigneY = 1; newLigneY <= nbrLigne; newLigneY++)
 					{
 						if(pieceJ2.get(indicePieceSelectJ2).regleMove(newColonneX, newLigneY) == true)
 						{
 							/*
 							 * Deplacement possible
 							 */
-							g.drawOval( (newColonneX * grille.espaceColonne) + (grille.espaceColonne / 2), (newLigneY * grille.espaceLigne) + (grille.espaceLigne / 2), (grille.espaceColonne / 2), (grille.espaceLigne / 2) );
+							g.drawOval( ((newColonneX - 1) * grille.espaceColonne) + (grille.espaceColonne / 2), ((newLigneY - 1) * grille.espaceLigne) + (grille.espaceLigne / 2), (grille.espaceColonne / 2), (grille.espaceLigne / 2) );
 						}
 					}
 				}

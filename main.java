@@ -7,8 +7,9 @@ public class main {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		fenetre = new Fenetre();
+		
 		partie = new Partie();
+		fenetre = new Fenetre(partie);
 		
 		ReseauNeuronale reseau = new ReseauNeuronale();
 		

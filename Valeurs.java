@@ -38,12 +38,9 @@ public interface Valeurs {
 	 * J2 : Rouge
 	 */
 	
-	TypeDePiece PieceJ1[] = {TypeDePiece.PION};//,TypeDePiece.PION,TypeDePiece.PION};
+	TypeDePiece PieceJ1[] = {TypeDePiece.PION,TypeDePiece.PION,TypeDePiece.PION};
 	TypeDePiece PieceJ2[] = {TypeDePiece.PION};//,TypeDePiece.PION,TypeDePiece.PION};
 	
-	Equipe tourDeJeu = Equipe.BLEU;
-	int indicePieceSelectJ1 = 0;
-	int indicePieceSelectJ2 = -1;
 	
 	ArrayList<Piece> pieceJ1 = new ArrayList<>();
 	ArrayList<Piece> pieceJ2 = new ArrayList<>();

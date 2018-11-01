@@ -79,6 +79,21 @@ public class Piece implements Valeurs{
 		
 		return false;
 	}
+	
+	public boolean isAutrePieceHere(int colonneX, int ligneY)
+	{
+		if(pieceJ1.size() >= 1)
+		{
+			for(Piece piece : pieceJ1)
+			{
+				if( (piece.posX == colonneX) && (piece.posY == ligneY) )
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	
 	
