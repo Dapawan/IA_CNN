@@ -30,7 +30,7 @@ public class Grille implements Valeurs{
 		calculEspaceLigneColonne();
 		
 		//Colonne
-		for(int x = debutPosColonne; x <= ( (nbrColonne + 0) * espaceColonne); x += espaceColonne)
+		for(int x = debutPosColonne; x <= ( (nbrColonne) * espaceColonne); x += espaceColonne)
 		{
 			g.drawLine(x, debutPosLigne, x, fenetre.getHeight());
 		}
@@ -39,7 +39,7 @@ public class Grille implements Valeurs{
 		
 		
 		//Ligne
-		for(int y = debutPosLigne; y <= ( (nbrLigne + 0) * espaceLigne); y += espaceLigne)
+		for(int y = debutPosLigne; y <= ( (nbrLigne) * espaceLigne); y += espaceLigne)
 		{
 			g.drawLine(debutPosColonne, y, fenetre.getWidth(), y);
 		}
@@ -53,7 +53,7 @@ public class Grille implements Valeurs{
 		int longueurDispo = (fenetre.getWidth() - debutPosColonne);
 		int hauteurDispo = (fenetre.getHeight() - debutPosLigne);
 		
-		this.espaceColonne = (longueurDispo / (nbrColonne + 0) );
+		this.espaceColonne = (longueurDispo / (nbrColonne) );
 		this.espaceLigne = (hauteurDispo / nbrLigne);
 		
 	}

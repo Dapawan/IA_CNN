@@ -25,9 +25,43 @@ public class Pion extends Piece implements Valeurs{
 			if( ((newColonneX >= 1) && (newColonneX <= nbrColonne))
 					&& ((newLigneY >= 1) && (newLigneY <= nbrLigne)) )
 			{
-				if(isAutrePieceHere(newColonneX, newLigneY) == true)
+				if(isAutrePieceHereJ1(newColonneX, newLigneY,false) == true)
 				{
-					return false;
+					if(equipe == Equipe.BLEU)
+					{
+						/*
+						 * On a une autre de nos pieces à cet endroit
+						 */
+						return false;
+					}
+					else
+					{
+						/*
+						 * Piece adverse
+						 */
+						
+						return true;
+					}
+					
+				}
+				else if(isAutrePieceHereJ2(newColonneX, newLigneY,false) == true)
+				{
+					if(equipe == Equipe.BLEU)
+					{
+						/*
+						 * Piece adverse
+						 */
+						return true;
+					}
+					else
+					{
+						
+						/*
+						 * On a une autre de nos pieces à cet endroit
+						 */
+						return false;
+					}
+					
 				}
 				return true;
 			}
@@ -40,7 +74,7 @@ public class Pion extends Piece implements Valeurs{
 	public void dessin(Graphics g, int espaceColonne, int espaceLigne) {
 		super.dessin(g, espaceColonne, espaceLigne);
 		
-		g.fillOval(posX, posY, espaceColonne, espaceLigne);
+		g.drawOval(posX, posY, espaceColonne, espaceLigne);
 	}
 
 }

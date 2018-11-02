@@ -14,6 +14,8 @@ public class Piece implements Valeurs{
 	public int posX;
 	public int posY;
 	
+	public int indicePieceAdverseToDel = -1;
+	
 
 	public Piece(TypeDePiece typeDePiece,Equipe equipe,int colonneX,int ligneY) 
 	{
@@ -72,6 +74,16 @@ public class Piece implements Valeurs{
 		 */
 		if(regleMove(newColonneX,newLigneY) == true)
 		{
+			if( (equipe == Equipe.BLEU) &&
+					(isAutrePieceHereJ2(newColonneX,newLigneY,true) == true) )
+			{
+				pieceJ2.remove(indicePieceAdverseToDel);
+			}
+			else if( (equipe == Equipe.ROUGE) &&
+					(isAutrePieceHereJ1(newColonneX,newLigneY,true) == true) )
+			{
+				pieceJ1.remove(indicePieceAdverseToDel);
+			}
 			this.colonneX = newColonneX;
 			this.ligneY = newLigneY;
 			return true;
@@ -80,18 +92,46 @@ public class Piece implements Valeurs{
 		return false;
 	}
 	
-	public boolean isAutrePieceHere(int colonneX, int ligneY)
+	public boolean isAutrePieceHereJ1(int colonneX, int ligneY,boolean isMove)
 	{
+		int index = 0;
 		if(pieceJ1.size() >= 1)
 		{
 			for(Piece piece : pieceJ1)
 			{
-				if( (piece.posX == colonneX) && (piece.posY == ligneY) )
+				if( (piece.colonneX == colonneX) && (piece.ligneY == ligneY) )
 				{
+					indicePieceAdverseToDel = index;
 					return true;
 				}
+				index++;
 			}
 		}
+		/*
+		 * Default value
+		 */
+		indicePieceAdverseToDel = -1;
+		return false;
+	}
+	public boolean isAutrePieceHereJ2(int colonneX, int ligneY,boolean isMove)
+	{
+		int index = 0;
+		if(pieceJ2.size() >= 1)
+		{
+			for(Piece piece : pieceJ2)
+			{
+				if( (piece.colonneX == colonneX) && (piece.ligneY == ligneY) )
+				{
+					indicePieceAdverseToDel = index;
+					return true;
+				}
+				index++;
+			}
+		}
+		/*
+		 * Default value
+		 */
+		indicePieceAdverseToDel = -1;
 		return false;
 	}
 

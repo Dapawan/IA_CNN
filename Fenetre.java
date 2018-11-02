@@ -37,7 +37,10 @@ public class Fenetre extends JFrame implements Valeurs{
 		
 		this.add(panel);
 		
-		panel.addMouseListener(partie);
+		if(nbrUser > 0)
+		{
+			panel.addMouseListener(partie);
+		}
 	}
 		
 	
@@ -85,6 +88,14 @@ public class Fenetre extends JFrame implements Valeurs{
 				/*
 				 * Dessin des déplacements possibles
 				 */
+				
+				/*
+				 * Sécu quand une piece a été del
+				 */
+				while(indicePieceSelectJ1 >= pieceJ1.size())
+				{
+					indicePieceSelectJ1--;
+				}
 				for(int newColonneX = 1; newColonneX <= nbrColonne; newColonneX++)
 				{
 					for(int newLigneY = 1; newLigneY <= nbrLigne; newLigneY++)
@@ -107,6 +118,14 @@ public class Fenetre extends JFrame implements Valeurs{
 				/*
 				 * Dessin des déplacements possibles
 				 */
+				
+				/*
+				 * Sécu quand une piece a été del
+				 */
+				while(indicePieceSelectJ2 >= pieceJ2.size())
+				{
+					indicePieceSelectJ2--;
+				}
 				for(int newColonneX = 1; newColonneX <= nbrColonne; newColonneX++)
 				{
 					for(int newLigneY = 1; newLigneY <= nbrLigne; newLigneY++)

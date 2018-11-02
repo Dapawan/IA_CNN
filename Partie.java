@@ -10,7 +10,8 @@ public class Partie implements Valeurs,MouseListener{
 	
 	public Fenetre fenetre = null;
 	
-	Equipe tourDeJeu = Equipe.BLEU;
+	Equipe tourDeJeu = null;
+	boolean isFinished = false;
 	
 	public Partie() 
 	{
@@ -20,12 +21,36 @@ public class Partie implements Valeurs,MouseListener{
 	
 	public void start()
 	{
-		
-		
+		if( (tourDeJeu == null) && (isFinished == false) )
+		{
+			tourDeJeu = Equipe.BLEU;		
+		}
+		else if(isFinished == false)
+		{
+			if(pieceJ1.size() == 0)
+			{
+				/*
+				 * J1 a perdu
+				 */
+				System.out.println("J1 defeated");
+				isFinished = true;
+			}
+			else if(pieceJ2.size() == 0)
+			{
+				/*
+				 * J1 a perdu
+				 */
+				System.out.println("J2 defeated");
+				isFinished = true;
+			}
+		}
 	}
 	
 	
-	
+	public void finish()
+	{
+		
+	}
 		
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -66,7 +91,7 @@ public class Partie implements Valeurs,MouseListener{
 		int posPieceY = 0;
 		boolean isNewPieceSelected = false;
 		
-		if( (tourDeJeu == Equipe.BLEU) && (pieceJ1.size() >= 1) )
+		if( (tourDeJeu == Equipe.BLEU) && (pieceJ1.size() >= 1) && (nbrUser >= 1) )
 		{
 			for(int index = 0; index < pieceJ1.size(); index++)
 			{
@@ -85,9 +110,9 @@ public class Partie implements Valeurs,MouseListener{
 			}
 			if(isNewPieceSelected == false)
 			{						
-				for(int newColonneX = 1; newColonneX <= nbrColonne; newColonneX++)
+				for(int newColonneX = 1; newColonneX <= nbrColonne + 1; newColonneX++)
 				{
-					for(int newLigneY = 1; newLigneY <= nbrLigne; newLigneY++)
+					for(int newLigneY = 1; newLigneY <= nbrLigne + 1; newLigneY++)
 					{
 						if(pieceJ1.get(fenetre.indicePieceSelectJ1).regleMove(newColonneX, newLigneY) == true)
 						{
@@ -107,7 +132,7 @@ public class Partie implements Valeurs,MouseListener{
 				}
 			}
 		}
-		else if( (tourDeJeu == Equipe.ROUGE) && (pieceJ2.size() >= 1) )
+		else if( (tourDeJeu == Equipe.ROUGE) && (pieceJ2.size() >= 1)  && (nbrUser == 2) )
 		{
 			for(int index = 0; index < pieceJ2.size(); index++)
 			{
@@ -126,11 +151,11 @@ public class Partie implements Valeurs,MouseListener{
 			}
 			if(isNewPieceSelected == false)
 			{
-				for(int newColonneX = 1; newColonneX <= nbrColonne; newColonneX++)
+				for(int newColonneX = 0; newColonneX <= nbrColonne; newColonneX++)
 				{
-					for(int newLigneY = 1; newLigneY <= nbrLigne; newLigneY++)
+					for(int newLigneY = 0; newLigneY <= nbrLigne; newLigneY++)
 					{
-						if(pieceJ1.get(fenetre.indicePieceSelectJ2).regleMove(newColonneX, newLigneY) == true)
+						if(pieceJ2.get(fenetre.indicePieceSelectJ2).regleMove(newColonneX, newLigneY) == true)
 						{
 							if(isCollisionHere(e.getX(),e.getY(),newColonneX,newLigneY) == true)
 							{
@@ -166,9 +191,19 @@ public class Partie implements Valeurs,MouseListener{
 	
 	public boolean isCollisionHere(int x, int y, int colonnePieceX, int lignePieceY)
 	{
-		if( (x >= (colonnePieceX - 1) * fenetre.grille.espaceColonne) && (x <= (colonnePieceX - 1) * (2*fenetre.grille.espaceColonne)) )
+		
+		int debutX = (( (colonnePieceX - 1) * fenetre.grille.espaceColonne) + debutPosColonne);
+		int finX = debutX + fenetre.grille.espaceColonne;
+		
+		int debutY = (( (lignePieceY - 1) * fenetre.grille.espaceLigne) + debutPosLigne);
+		int finY = debutY + fenetre.grille.espaceLigne;
+		/*
+		System.out.println("X : " + x + " debutX :" + debutX + "  finX :" + finX);
+		System.out.println("Y : " + y + " debutY :" + debutY + "  finY :" + finY);
+		*/
+		if( (x >= debutX) && (x <= finX) )
 		{
-			if( (y >= (lignePieceY - 1) * fenetre.grille.espaceLigne) && (y <= (lignePieceY - 1) * (2*fenetre.grille.espaceLigne)) )
+			if( (y >= debutY) && (y <= finY) )
 			{
 				return true;
 			}

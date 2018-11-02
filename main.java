@@ -20,6 +20,7 @@ public class main {
 		
 		while(true)
 		{
+			partie.start();
 			Thread.sleep(10);
 			
 			
