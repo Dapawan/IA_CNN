@@ -16,10 +16,11 @@ public interface Valeurs {
 	 * Contrôle IA
 	 */
 	int nbrIA = 2;
-	
+	int poidsPonderationProprePieceIA = 2;
 	
 	/*
 	 * Caractéristiques grille
+	 * Garder une grille paire !
 	 */
 	int nbrColonne = 4;
 	int nbrLigne = 4;
@@ -36,8 +37,8 @@ public interface Valeurs {
 	/*
 	 * Reseau neuronale
 	 */
-	char nbrEntree = 17;
-	char[] nbrNeuroneParCouche = {15,15,17};
+	char nbrEntree = 16;
+	char[] nbrNeuroneParCouche = {15,15,16};
 	
 	/*
 	 * Types de pieces

@@ -76,6 +76,7 @@ public class Partie implements Valeurs,MouseListener{
 		
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		/*
@@ -285,6 +286,87 @@ public class Partie implements Valeurs,MouseListener{
 				ligneY += 1;
 			}
 		}
+	}
+	
+	
+	public ArrayList<Piece> creationPieceIA(Equipe equipe)
+	{
+		
+		ArrayList<Piece> listePiece = new ArrayList<>();
+		
+		
+		int colonneX = nbrColonne;
+		int ligneY = nbrLigne;
+		
+		/*
+		 * On regarde l'équipe pour le placement
+		 */
+		if(equipe == Equipe.BLEU)
+		{
+			for(int i = 0; i < PieceJ1.length; i++)
+			{
+				switch(PieceJ1[i])
+				{
+				case CAVALIER:
+					break;
+				case FOU:
+					break;
+				case PION:
+					listePiece.add(new Pion(equipe, colonneX, ligneY));
+					break;
+				case TOUR:
+					break;
+				default:
+					break;
+				
+				}
+				
+				/*
+				 * Décalage vers le bas (de haut en bas)
+				 */
+				if(colonneX-- < 1)
+				{
+					colonneX = nbrColonne;
+					ligneY -= 1;
+				}
+			}
+		}
+		else
+		{
+			colonneX = nbrColonne;
+			ligneY = 1;
+			
+			for(int i = 0; i < PieceJ2.length; i++)
+			{
+				switch(PieceJ2[i])
+				{
+				case CAVALIER:
+					break;
+				case FOU:
+					break;
+				case PION:
+					listePiece.add(new Pion(equipe, colonneX, ligneY));
+					break;
+				case TOUR:
+					break;
+				default:
+					break;
+				
+				}
+				
+				/*
+				 * Décalage vers le haut (de bas en haut)
+				 */
+				if(colonneX-- < 1)
+				{
+					colonneX = nbrColonne;
+					ligneY += 1;
+				}
+			}
+		}
+		
+		return listePiece;
+		
 	}
 
 }
