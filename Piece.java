@@ -2,11 +2,15 @@ package Chess;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class Piece implements Valeurs{
 	
 	public TypeDePiece typeDePiece;
 	public Equipe equipe;
+	
+	ArrayList<Piece> pieceJ1 = new ArrayList<>();
+	ArrayList<Piece> pieceJ2 = new ArrayList<>();
 	
 	public int colonneX;
 	public int ligneY;
@@ -18,13 +22,14 @@ public class Piece implements Valeurs{
 	
 
 	public Piece(TypeDePiece typeDePiece,Equipe equipe,int colonneX,int ligneY) 
-	{
+	{	
 		this.equipe = equipe;
 		this.typeDePiece = typeDePiece;
 		this.colonneX = colonneX;
 		this.ligneY = ligneY;
 	}
 
+	
 	/*
 	 * Fonction à override
 	 */

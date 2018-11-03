@@ -13,6 +13,9 @@ public class Partie implements Valeurs,MouseListener{
 	Equipe tourDeJeu = null;
 	boolean isFinished = false;
 	
+	ArrayList<Piece> pieceJ1 = new ArrayList<>();
+	ArrayList<Piece> pieceJ2 = new ArrayList<>();
+	
 	public Partie() 
 	{
 		creationPiece();
@@ -286,6 +289,21 @@ public class Partie implements Valeurs,MouseListener{
 				ligneY += 1;
 			}
 		}
+		/*
+		 * On donne son adv
+		 */
+		for(Piece piece : pieceJ1)
+		{
+			piece.pieceJ1 = pieceJ1;
+			piece.pieceJ2 = pieceJ2;
+			
+		}
+		for(Piece piece : pieceJ2)
+		{
+			piece.pieceJ1 = pieceJ1;
+			piece.pieceJ2 = pieceJ2;
+			
+		}
 	}
 	
 	
@@ -364,7 +382,7 @@ public class Partie implements Valeurs,MouseListener{
 				}
 			}
 		}
-		
+				
 		return listePiece;
 		
 	}

@@ -22,8 +22,8 @@ public interface Valeurs {
 	 * Caractéristiques grille
 	 * Garder une grille paire !
 	 */
-	int nbrColonne = 4;
-	int nbrLigne = 4;
+	int nbrColonne = 2;
+	int nbrLigne = 2;
 	
 	int debutPosColonne = 30;//x
 	int debutPosLigne = 30;//y
@@ -32,13 +32,13 @@ public interface Valeurs {
 	/*
 	 * Neurone
 	 */
-	double biasMax = 0.05d;
-	double weightMax = 0.05d;
+	double biasMax = 5d;
+	double weightMax = 5d;
 	/*
 	 * Reseau neuronale
 	 */
-	char nbrEntree = 16;
-	char[] nbrNeuroneParCouche = {15,15,16};
+	char nbrEntree = 4;
+	char[] nbrNeuroneParCouche = {4,2,4};
 	
 	/*
 	 * Types de pieces
@@ -47,13 +47,19 @@ public interface Valeurs {
 	enum Equipe{BLEU,ROUGE};	
 	
 	/*
+	 * Nbr de même deplacement autorisés avant arret game
+	 */
+	int nbrSameMove = 3; //1 pour le save puis 2 move
+	
+	
+	/*
 	 * Play
 	 * J1 : Bleu
 	 * J2 : Rouge
 	 */
 	
-	TypeDePiece PieceJ1[] = {TypeDePiece.PION,TypeDePiece.PION,TypeDePiece.PION};
-	TypeDePiece PieceJ2[] = {TypeDePiece.PION,TypeDePiece.PION,TypeDePiece.PION};
+	TypeDePiece PieceJ1[] = {TypeDePiece.PION};
+	TypeDePiece PieceJ2[] = {TypeDePiece.PION};
 	
 	
 	ArrayList<Piece> pieceJ1 = new ArrayList<>();

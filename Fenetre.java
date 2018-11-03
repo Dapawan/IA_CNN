@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,14 +14,17 @@ public class Fenetre extends JFrame implements Valeurs{
 	private Panel panel;
 	public Grille grille;
 	private Partie partie;
+	private GestionIA gestionIA;
 	
 	public int indicePieceSelectJ1 = 0;
 	public int indicePieceSelectJ2 = 0;
 	
+	ArrayList<Piece> pieceJ1 = new ArrayList<>();
+	ArrayList<Piece> pieceJ2 = new ArrayList<>();
 	
-	
-	public Fenetre(Partie partie) {
+	public Fenetre(Partie partie,GestionIA gestionIA) {
 		
+		this.gestionIA = gestionIA;
 		this.partie = partie;
 		partie.fenetre = this;
 		this.grille = new Grille(this);
@@ -39,7 +43,15 @@ public class Fenetre extends JFrame implements Valeurs{
 		
 		if(nbrUser > 0)
 		{
+			pieceJ1 = partie.pieceJ1;
+			pieceJ2 = partie.pieceJ2;
+			
 			panel.addMouseListener(partie);
+		}
+		else
+		{
+			pieceJ1 = gestionIA.listeIA.get(0).listePiece;
+			pieceJ2 = gestionIA.listeIA.get(1).listePiece;
 		}
 	}
 		
@@ -49,6 +61,9 @@ public class Fenetre extends JFrame implements Valeurs{
 		
 		@Override
 		public void paint(Graphics g) {
+			
+			pieceJ1 = gestionIA.listeIA.get(0).listePiece;
+			pieceJ2 = gestionIA.listeIA.get(1).listePiece;
 			
 			super.paint(g);
 			

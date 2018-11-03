@@ -1,6 +1,7 @@
 package Chess;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 public class Pion extends Piece implements Valeurs{
 

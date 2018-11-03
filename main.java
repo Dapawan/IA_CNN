@@ -1,27 +1,38 @@
 package Chess;
 
-public class main {
+public class main implements Valeurs{
 	
 	private static Fenetre fenetre;
 	private static Partie partie;
+	private static GestionIA gestionIA;
 
 	public static void main(String[] args) throws InterruptedException {
 
 		
 		partie = new Partie();
-		fenetre = new Fenetre(partie);
+		gestionIA = new GestionIA();
+		fenetre = new Fenetre(partie,gestionIA);
 		
-		ReseauNeuronale reseau = new ReseauNeuronale();
-		
-		double entree[] = {1,1};
-		double sortie[];
-		
-		sortie = reseau.result(entree);
-		
+
 		while(true)
 		{
-			partie.start();
-			Thread.sleep(10);
+			if(nbrUser > 0)
+			{
+				partie.start();
+			}
+			else
+			{
+				gestionIA.calcul();
+			}
+			
+			if(nbrUser > 0)
+			{
+				Thread.sleep(100);
+			}
+			else
+			{
+				Thread.sleep(gestionIA.timeToWait);
+			}
 			
 			
 			fenetre.repaint();
