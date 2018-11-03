@@ -54,6 +54,7 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 	
 	public double[] maxMin = new double[2];;
 	public int score;
+	public Chrono chrono;
 	
 	public double[] entree;
 	
@@ -111,7 +112,14 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		{
 			for(int a = 0; a < NBR_NEURONE_PAR_COUCHE; a++)
 			{
-				this.neuroneArray[i][a] = new Neurone(NBR_ENTREE_PAR_NEURONE);
+				if(i == 0)
+				{
+					this.neuroneArray[i][a] = new Neurone(NBR_ENTREE_PAR_NEURONE,true);
+				}
+				else
+				{
+					this.neuroneArray[i][a] = new Neurone(NBR_ENTREE_PAR_NEURONE,false);
+				}
 			}
 		}
 		
@@ -189,6 +197,11 @@ public class CoucheNeuronale implements Valeurs,Cloneable{
 		 */
 		//On mémorise pour raccourcir les tests
 		//double valueWeight = this.neuroneArray[numeroCouche][numeroNeurone].weight[numeroWeight];
+		
+		if(numeroCouche < NBR_COUCHE)
+		{
+			multiplicateur /= 100;
+		}
 		
 		
 		if(isChgmntBias == true)

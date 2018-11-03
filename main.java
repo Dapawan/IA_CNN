@@ -40,6 +40,7 @@ public class main implements Valeurs{
 				{
 					fenetre.map.persoListe.add(new Personnage(fenetre.map.listeBloc.get(0),fenetre.map));
 				}
+				fenetre.map.stopGame = false;
 			}
 			
 			/*
@@ -102,9 +103,9 @@ public class main implements Valeurs{
 						if( (fenetre.map.perso.isJumping == true) && (fenetre.map.perso.compteur <= compteurMax))
 						{
 							fenetre.map.perso.compteurSprint -= decrSpeedJump;
-							if(fenetre.map.perso.compteurSprint < (1*multiplicateur))
+							if(fenetre.map.perso.compteurSprint < (vitesseX*multiplicateur))
 							{
-								fenetre.map.perso.compteurSprint = 1*multiplicateur;
+								fenetre.map.perso.compteurSprint = vitesseX*multiplicateur;
 							}
 							
 							fenetre.map.perso.compteur++;
@@ -139,9 +140,9 @@ public class main implements Valeurs{
 								if( (perso.isJumping == true) && (perso.compteur <= compteurMax))
 								{
 									perso.compteurSprint -= decrSpeedJump;
-									if(perso.compteurSprint < (1*multiplicateur))
+									if(perso.compteurSprint < (vitesseX*multiplicateur))
 									{
-										perso.compteurSprint = 1*multiplicateur;
+										perso.compteurSprint = vitesseX*multiplicateur;
 									}
 									perso.compteur++;
 									fenetre.map.move( posX, (posY - 2) ,perso);

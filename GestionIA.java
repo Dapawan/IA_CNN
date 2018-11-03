@@ -68,8 +68,11 @@ public class GestionIA implements Valeurs{
 					if(posX >= (longueurLevel - (3*longueurBloc)) && (isFocusPlayer == false) )
 					{
 						//Niveau finit
-						System.out.println("**FINISH");
-						System.out.println(perso.coucheNeuronale.toString());
+						if(optimisationIaBoucleInf == false)
+						{
+							System.out.println("**FINISH");
+							System.out.println(perso.coucheNeuronale.toString());
+						}
 						
 						for(Personnage perso_ : fenetre.map.persoListe)
 						{
@@ -78,9 +81,25 @@ public class GestionIA implements Valeurs{
 								perso = perso_;
 							}
 						}
-						ecriture = new Ecriture(perso.coucheNeuronale, "resultatfinal.txt");
-						ecriture.start();
 						
+						if(optimisationIaBoucleInf == false)
+						{
+							ecriture = new Ecriture(perso.coucheNeuronale, "resultatfinal.txt");
+							ecriture.start();
+						}
+						else
+						{
+							if(fenetre.graph.isBestTime() == true)
+							{
+								System.out.println("SAVE best Time");
+								ecriture = new Ecriture(perso.coucheNeuronale, "resultatfinal.txt");
+								ecriture.start();
+							}
+							else
+							{
+								System.out.println("DON'T save !");
+							}
+						}
 						
 						fenetre.map.stopGame = true;
 						
@@ -217,6 +236,7 @@ public class GestionIA implements Valeurs{
 				
 				//On stocke le score dans la classe coucheNeuronale
 				perso.coucheNeuronale.score = perso.score;
+				perso.coucheNeuronale.chrono = (Chrono) perso.chrono.clone();
 				//On ajoute ce réseau à la liste des résultats
 				resultat.ajout((CoucheNeuronale) perso.coucheNeuronale.clone());
 				
@@ -236,9 +256,12 @@ public class GestionIA implements Valeurs{
 			{
 				System.out.println("Résultat");
 				resultat.CoucheNeuronaleListe.sort(resultat);
-				for(int a = 0; a <= nbrResultatStocke; a++)
+				if(optimisationIaBoucleInf == false)
 				{
-					System.out.println("Score " + resultat.CoucheNeuronaleListe.get(a).score);
+					for(int a = 0; a <= nbrResultatStocke; a++)
+					{
+						System.out.println("Score " + resultat.CoucheNeuronaleListe.get(a).score);
+					}
 				}
 				meilleursCouche[0] = (CoucheNeuronale) resultat.CoucheNeuronaleListe.get(0).clone();
 				
@@ -254,7 +277,18 @@ public class GestionIA implements Valeurs{
 			
 			
 			fenetre.map.compteurGeneration++;
-			fenetre.graph.addScore(meilleursCouche[0].score);
+			if(optimisationIaBoucleInf == false)
+			{
+				fenetre.graph.addScore(meilleursCouche[0].score);
+			}
+			else
+			{
+				if(fenetre.map.compteurGeneration > 1)
+				{
+					double temps = ((double)meilleursCouche[0].chrono.getTime() / (double)fenetre.map.listeBloc.size());
+					fenetre.graph.addTime(temps);
+				}
+			}
 			
 			/*
 			 * Gestion du coeff de mutation
@@ -306,7 +340,14 @@ public class GestionIA implements Valeurs{
 							//coucheNeuronale.neuroneArray = resultat.CoucheNeuronaleListe.get(0).neuroneArray.clone();
 							//perso.coucheNeuronale = new CoucheNeuronale();
 							//coucheNeuronale.mutation(meilleursCouche.clone(),perso.coucheNeuronale);
-							perso.coucheNeuronale.mutationBETA(meilleursCouche[0].neuroneArray,fenetre.map.compteurGeneration,((compteurScoreOld+1)*1));
+							if(optimisationIaBoucleInf == false)
+							{
+								perso.coucheNeuronale.mutationBETA(meilleursCouche[0].neuroneArray,fenetre.map.compteurGeneration,((compteurScoreOld+1)*1));
+							}
+							else
+							{
+								perso.coucheNeuronale.mutationBETA(meilleursCouche[0].neuroneArray,fenetre.map.compteurGeneration,(float)(Math.random() - 1));
+							}
 							
 						}
 					}

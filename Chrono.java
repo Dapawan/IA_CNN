@@ -3,7 +3,7 @@ package mario;
 import java.security.Timestamp;
 import java.sql.Time;
 
-public class Chrono {
+public class Chrono implements Cloneable{
 	
 	private long depart;
 	private long fin;
@@ -57,5 +57,9 @@ public class Chrono {
 		
 		return "" + heure + " : " + min + " : " + sec;
 	}
-	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return super.clone();
+	}
 }

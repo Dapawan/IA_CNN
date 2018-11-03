@@ -12,7 +12,7 @@ public class Neurone implements Valeurs,Cloneable{
 	
 	public double result;
 	
-	public Neurone(int nbrEntree) {
+	public Neurone(int nbrEntree,boolean isFirstCouche) {
 		
 		this.numero++;
 		//System.out.println("Création de la neurone n° " + this.numero);
@@ -24,9 +24,21 @@ public class Neurone implements Valeurs,Cloneable{
 		weight = new double[nbrEntree];
 		//Init des valeurs
 		
-		for(int i = 0; i < nbrEntree; i++) {
-			this.bias[i] = (Math.random() - 0.5) * (biasMax * 2);
-			this.weight[i] = (Math.random() - 0.5) * (weightMax * 2);
+		if(isFirstCouche == false)
+		{
+			for(int i = 0; i < nbrEntree; i++) 
+			{
+				this.bias[i] = (Math.random() - 0.5) * (biasMax * 2);
+				this.weight[i] = (Math.random() - 0.5) * (weightMax * 2);
+			}
+		}
+		else
+		{
+			for(int i = 0; i < nbrEntree; i++) 
+			{
+				this.bias[i] = (Math.random() - 0.5) * ( (biasMax/100) * 2);
+				this.weight[i] = (Math.random() - 0.5) * ( (weightMax/100) * 2);
+			}
 		}
 		
 		

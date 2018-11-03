@@ -12,27 +12,27 @@ public interface Valeurs {
 	int longueurFenetre = 1000;
 	
 	//Focus perso player
-	boolean isFocusPlayer = true;
+	boolean isFocusPlayer = false;
 	
 	//Time IA to die when AFK
-	int TimeToDieAFK = 1000;//En ms
+	int TimeToDieAFK = 100;//En ms
 	boolean optimisationIaBoucleInf = false;
 	//Lancement IA
 	boolean isIa = false;
 	//Reprise ancien resultat
-	boolean ancienResult = true;
+	boolean ancienResult = false;
 	
 	int nbrEssaiAVReset = 10;
 	boolean isPlusieurIa = true;
-	int nbrIA = 2;//89;//32;
+	int nbrIA = 89;//32;
 	int nbrResultatStocke = 2;
 	
 	//Neurone
 	double biasMax = 0.02d;//Entre - biasMax et + biasMax
 	double weightMax = 0.02d;//de même
 	//Neurone inr/decr
-	double incrPasNeurone = 0.005d;
-	double incrPasNeuronebias = 0.005d;
+	double incrPasNeurone = 0.05d;//0.005d;
+	double incrPasNeuronebias = 0.05d;//0.005d;
 		
 	//Dessin coucheNeuronale
 	int posXCoucheNeuronale = 10;
@@ -71,7 +71,7 @@ public interface Valeurs {
 	int largeurEntrePointAbscisse = 10;
 	int hauteurTraitGraduation = 5;
 	
-	int longueurLevel = 30000;
+	int longueurLevel = 50000;
 	//Bloc
 	int hauteurBloc = 50;
 	int longueurBloc = 100;
@@ -85,14 +85,14 @@ public interface Valeurs {
 	
 	
 	//Déplacement perso
-	int vitesseX = 3;
+	int vitesseX = 2;
 	int vitesseY = 5;
 	int speedXMAx = 9;
 	int multiplicateur = 100;
-	int decrSpeedJump = 6;
-	int incrSpeedSol = 5;
+	int decrSpeedJump = 3;
+	int incrSpeedSol = 2;
 	//Tick lié à la gravité de saut
-	int compteurMax = 200/vitesseX;
+	int compteurMax = 280/vitesseX;
 	//Temps entre chaque déplacement perso
 	int tpsDeplacement = 5;
 	//Jump

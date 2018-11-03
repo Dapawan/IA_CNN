@@ -382,7 +382,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						/*
 						 * Reset speed
 						 */
-						perso.compteurSprint = (1*multiplicateur);
+						perso.compteurSprint = (vitesseX*multiplicateur);
 						System.out.println("Changement dir");
 					}
 					
@@ -413,7 +413,7 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						/*
 						 * Reset speed
 						 */
-						perso.compteurSprint = (1*multiplicateur);
+						perso.compteurSprint = (vitesseX*multiplicateur);
 						System.out.println("Changement dir");
 					}
 					
@@ -475,7 +475,9 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					
 					//Background
 					g.drawImage(map.backgroundImg,0,0,null);
+					//On dessine le graphe score dans le cas où on ne cherche pas l'optimisation de temps
 					graph.dessin(g);
+					
 					int xStart = -1;
 					if(isPlusieurIa == false)
 					{
@@ -486,34 +488,38 @@ public class Fenetre_ extends JFrame implements Valeurs{
 						//On garde le perso le plus loin
 						int posX = 0;
 						
-						for(int i = 0; i < nbrIA; i++)
+						if(map.persoListe.size() == nbrIA) 
 						{
-							posX = map.persoListe.get(i).posX;
-							if( (xStart < posX) && (map.persoListe.get(i).vie == true))
+							for(int i = 0; i < nbrIA; i++)
 							{
-								xStart = posX;
+								posX = map.persoListe.get(i).posX;
+								if( (xStart < posX) && (map.persoListe.get(i).vie == true))
+								{
+									xStart = posX;
+								}
 							}
+							if( (isFocusPlayer == true) && (map.persoListe.get(0).vie == true) )
+							{
+								xStart = map.persoListe.get(0).posX;
+							}
+							//On s'occupe du blocage à gauche
+							if(xStart >= stopMvGauche)
+							{
+								xStart -= stopMvGauche;
+							}
+							else
+							{
+								xStart = 0;
+							}
+							
+							g.setColor(Color.black);
+							if(chrono != null)
+							{
+								g.drawString("Temps : " + chrono.toString(),posXChrono,posYChrono);
+							}
+							g.drawString("Score : " + xStart + " points", posXScore, posYScore);
+							
 						}
-						if( (isFocusPlayer == true) && (map.persoListe.get(0).vie == true) )
-						{
-							xStart = map.persoListe.get(0).posX;
-						}
-						//On s'occupe du blocage à gauche
-						if(xStart >= stopMvGauche)
-						{
-							xStart -= stopMvGauche;
-						}
-						else
-						{
-							xStart = 0;
-						}
-						
-						g.setColor(Color.black);
-						if(chrono != null)
-						{
-							g.drawString("Temps : " + chrono.toString(),posXChrono,posYChrono);
-						}
-						g.drawString("Score : " + xStart + " points", posXScore, posYScore);
 					}
 					int xEnd = xStart + longueurFenetre;
 					
@@ -601,68 +607,72 @@ public class Fenetre_ extends JFrame implements Valeurs{
 					else
 					{
 						//Plusieur IA
-						for(int i = 0; i < nbrIA; i++)
+						if(map.persoListe.size() == nbrIA)
 						{
-							perso = map.persoListe.get(i);
-							int posX = perso.posX;
-							if((perso.vie == true) && (posX >= (xStart) && (posX <= xEnd) ))
+							for(int i = 0; i < nbrIA; i++)
 							{
-								//
-								posX -= (xStart);
-								if(posX >= stopMvGauche && isFocusPlayer == false) 
+								perso = map.persoListe.get(i);
+								int posX = perso.posX;
+								if((perso.vie == true) && (posX >= (xStart) && (posX <= xEnd) ))
 								{
+									//
+									posX -= (xStart);
+									if(posX >= stopMvGauche && isFocusPlayer == false) 
+									{
+										
+										posX = stopMvGauche;
+									}
 									
-									posX = stopMvGauche;
-								}
-								
-								if(isFocusPlayer == true)
-								{
-									g.setColor(Color.BLACK);
-									g.drawString("" + i, posX + (perso.longueurPerso/2), perso.posY - 10);
-								}
-								
-								if(perso.direction == Direction.RIGHT)
-								{
-									if(++perso.compteurImg >= 90)
+									if(isFocusPlayer == true)
 									{
-										perso.compteurImg = 10;
+										g.setColor(Color.BLACK);
+										g.drawString("" + i, posX + (perso.longueurPerso/2), perso.posY - 10);
 									}
-									g.drawImage(perso.img[1][(perso.compteurImg/10)],posX, perso.posY, null);
-								}
-								else if(perso.direction == Direction.LEFT)
-								{
-									if(++perso.compteurImg >= 90)
+									
+									if(perso.direction == Direction.RIGHT)
 									{
-										perso.compteurImg = 10;
+										if(++perso.compteurImg >= 90)
+										{
+											perso.compteurImg = 10;
+										}
+										g.drawImage(perso.img[1][(perso.compteurImg/10)],posX, perso.posY, null);
 									}
-									g.drawImage(perso.img[0][(perso.compteurImg/10)],posX, perso.posY, null);
-								}
-								else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
-								{
-									if( (perso.directionOld == Direction.RIGHT) || (perso.directionOld == Direction.INIT) )
+									else if(perso.direction == Direction.LEFT)
 									{
-										g.drawImage(perso.img[1][1],posX, perso.posY, null);
+										if(++perso.compteurImg >= 90)
+										{
+											perso.compteurImg = 10;
+										}
+										g.drawImage(perso.img[0][(perso.compteurImg/10)],posX, perso.posY, null);
 									}
-									else
+									else//Gestion de l'orientation perso sans déplacment (garde l'orientation après mv)
 									{
-										g.drawImage(perso.img[0][1],posX, perso.posY, null);
+										if( (perso.directionOld == Direction.RIGHT) || (perso.directionOld == Direction.INIT) )
+										{
+											g.drawImage(perso.img[1][1],posX, perso.posY, null);
+										}
+										else
+										{
+											g.drawImage(perso.img[0][1],posX, perso.posY, null);
+										}
 									}
 								}
 							}
-						}
-						
-						//Affichage nbr alive
-						g.drawString("Alive : " + map.nbrPersoAlive() + "/" + nbrIA, posXAlive, posYAlive);
-						//Affichage génération
-						g.drawString("Gen : " + map.compteurGeneration , posXGene, posYGene);
-						
-						
-						
-						
-						//Dessin couche neuronale
-						if(coucheNeuronale != null)
-						{
-							dessinCoucheNeuronale(coucheNeuronale,g);
+							
+							//Affichage nbr alive
+							g.drawString("Alive : " + map.nbrPersoAlive() + "/" + nbrIA, posXAlive, posYAlive);
+							//Affichage génération
+							g.drawString("Gen : " + map.compteurGeneration , posXGene, posYGene);
+							
+							
+							
+							
+							//Dessin couche neuronale
+							if(coucheNeuronale != null)
+							{
+								dessinCoucheNeuronale(coucheNeuronale,g);
+							}
+							
 						}
 					}
 					

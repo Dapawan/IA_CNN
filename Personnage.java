@@ -113,7 +113,7 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 		this.longueurPerso = img[0][1].getWidth();
 		
 		this.posX = bloc.posX;
-		this.posY = bloc.posY - this.hauteurPerso - 10;
+		this.posY = bloc.posY - this.hauteurPerso - 1;
 		
 	}
 	
@@ -124,7 +124,7 @@ public class Personnage implements Valeurs,Comparator<Personnage>{
 		this.isJumping = true;
 		
 		this.posX = map.listeBloc.get(0).posX;
-		this.posY = map.listeBloc.get(0).posY - this.hauteurPerso - 10;
+		this.posY = map.listeBloc.get(0).posY - this.hauteurPerso - 1;
 	}
 
 	@Override
